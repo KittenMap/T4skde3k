@@ -621,18 +621,38 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
 .msg.selected .msg-bubble{opacity:.55;}
 
 .chat-input-bar{
-  flex:0 0 auto;display:flex;gap:8px;align-items:center;
-  padding:10px 14px calc(10px + env(safe-area-inset-bottom));
+  flex:0 0 auto;display:flex;gap:6px;align-items:center;
+  padding:10px 12px calc(10px + env(safe-area-inset-bottom));
   border-top:1px solid var(--line);background:var(--bg);
 }
+.chat-plus-btn{
+  flex:0 0 auto;width:40px;height:40px;border-radius:50%;
+  background:var(--card);border:1px solid var(--line-2);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--text-2);
+  transition:background .14s;
+}
+.chat-plus-btn:active{background:var(--accent-soft);}
+.chat-plus-btn svg{width:20px;height:20px;display:block;}
 .chat-input{
-  flex:1 1 auto;background:var(--card);border:1px solid var(--line-2);
+  flex:1 1 auto;min-width:0;
+  background:var(--card);border:1px solid var(--line-2);
   border-radius:20px;padding:10px 16px;font-size:15px;min-height:40px;
 }
 .chat-input:focus{border-color:var(--text-2);}
 .chat-input::placeholder{color:var(--text-3);}
+.chat-proactive-btn{
+  flex:0 0 auto;width:40px;height:40px;border-radius:50%;
+  background:var(--accent-soft);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--text);
+  transition:opacity .14s;
+}
+.chat-proactive-btn:active{opacity:.7;}
+.chat-proactive-btn:disabled{opacity:.4;pointer-events:none;}
+.chat-proactive-btn svg{width:19px;height:19px;display:block;}
 .chat-send{
-  flex:0 0 auto;height:40px;padding:0 18px;border-radius:20px;
+  flex:0 0 auto;height:40px;padding:0 16px;border-radius:20px;
   background:var(--accent);color:var(--accent-text);
   font-size:14px;font-weight:500;transition:opacity .14s;
 }
@@ -641,20 +661,64 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
 
 .chat-action-bar{
   flex:0 0 auto;display:none;
-  align-items:center;gap:10px;
-  padding:10px 14px calc(10px + env(safe-area-inset-bottom));
+  align-items:center;gap:8px;
+  padding:10px 12px calc(10px + env(safe-area-inset-bottom));
   border-top:1px solid var(--line);background:var(--bg);
 }
 .chat-action-btn{
-  font-size:15px;color:var(--text-2);padding:8px 6px;
-  transition:opacity .14s;
+  font-size:14px;color:var(--text-2);padding:8px 6px;
+  transition:opacity .14s;white-space:nowrap;
 }
 .chat-action-btn:active{opacity:.5;}
 .chat-action-btn.strong{color:var(--text);font-weight:500;}
 .chat-action-btn.danger{color:var(--pri-high);font-weight:500;}
+.chat-action-btn:disabled{opacity:.35;pointer-events:none;}
 .chat-action-title{
-  flex:1;text-align:center;font-size:14px;color:var(--text);
+  flex:1;text-align:center;font-size:13.5px;color:var(--text);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+
+/* 加号面板 */
+.plus-backdrop{
+  position:fixed;inset:0;z-index:180;background:rgba(0,0,0,.2);
+  opacity:0;pointer-events:none;transition:opacity .24s;
+}
+.plus-backdrop.show{opacity:1;pointer-events:auto;}
+.plus-panel{
+  position:fixed;left:0;right:0;bottom:0;z-index:181;
+  max-width:640px;margin:0 auto;background:var(--bg);
+  border-radius:20px 20px 0 0;
+  transform:translateY(102%);
+  transition:transform .3s cubic-bezier(.32,.72,0,1);
+  padding-bottom:env(safe-area-inset-bottom);
+  box-shadow:0 -6px 32px rgba(0,0,0,.09);
+}
+.plus-panel.show{transform:translateY(0);}
+.plus-handle{
+  width:36px;height:4px;border-radius:2px;
+  background:var(--line-2);margin:9px auto 4px;
+}
+.plus-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:16px 12px;
+  padding:20px 18px 22px;
+}
+.plus-item{
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  background:transparent;
+}
+.plus-item-icon{
+  width:56px;height:56px;border-radius:14px;
+  background:var(--card);border:1px solid var(--line-2);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--text);
+  transition:background .14s,transform .1s;
+}
+.plus-item:active .plus-item-icon{background:var(--accent-soft);transform:scale(.95);}
+.plus-item-icon svg{width:24px;height:24px;display:block;}
+.plus-item-label{
+  font-size:11.5px;color:var(--text-2);
+  letter-spacing:.2px;white-space:nowrap;
 }
 
 .ai-avatar-btn{
@@ -923,7 +987,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
         </button>
       </div>
 
-      <div class="hint">所有数据保存在本机浏览器中<br>不会上传到任何服务器</div>
+      <div class="hint">本地存储<br>建议定期导出备份</div>
     </section>
 
     <section class="view" id="view-stats">
@@ -1195,12 +1259,22 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
   </div>
   <div class="chat-body" id="chatBody"></div>
   <div class="chat-input-bar" id="chatInputBar">
+    <button class="chat-plus-btn" id="chatPlusBtn" aria-label="更多">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+    </button>
     <input class="chat-input" id="chatInput" placeholder="输入消息…" autocomplete="off" autocapitalize="off" spellcheck="false">
+    <button class="chat-proactive-btn" id="chatProactiveBtn" aria-label="让 AI 主动说">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20.5 12a8.5 8.5 0 1 1-2.5-6.02"/>
+        <path d="M20.5 4.5v5h-5"/>
+      </svg>
+    </button>
     <button class="chat-send" id="chatSend">发送</button>
   </div>
   <div class="chat-action-bar" id="chatActionBar">
     <button class="chat-action-btn" id="chatActionCancel">取消</button>
     <span class="chat-action-title" id="chatActionTitle"></span>
+    <button class="chat-action-btn danger" id="chatActionDeleteFrom" style="display:none">以下全部</button>
     <button class="chat-action-btn strong" id="chatActionDone">完成</button>
   </div>
 </div>
@@ -1237,7 +1311,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     </div>
     <div class="block">
       <div class="sub-label">上下文条数</div>
-      <input class="input" type="number" id="aiContextInput" min="1" max="50" placeholder="10" inputmode="numeric">
+      <input class="input" type="number" id="aiContextInput" min="1" placeholder="10" inputmode="numeric">
     </div>
     <div class="block">
       <div class="sub-label">预估使用量</div>
@@ -1277,6 +1351,12 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     <div class="block">
       <button class="btn-secondary" id="aiTestConn" type="button" style="width:100%;">测试连接</button>
     </div>
+
+    <div class="section-divider"><span>AI 设定备份</span></div>
+    <div class="block" style="display:flex;gap:10px;">
+      <button class="btn-secondary" id="aiExportBtn" type="button" style="flex:1;">导出 AI 设定</button>
+      <button class="btn-secondary" id="aiImportBtn" type="button" style="flex:1;">导入 AI 设定</button>
+    </div>
   </div>
   <div class="page-foot">
     <button class="btn-secondary" id="aiSetCancel">取消</button>
@@ -1301,12 +1381,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     </div>
     <div class="block">
       <div class="sub-label">每多少条消息自动总结</div>
-      <div class="stepper" id="memIntervalStep">
-        <button type="button" data-step="-1">−</button>
-        <span class="step-val" id="memIntervalVal">20</span>
-        <button type="button" data-step="1">+</button>
-        <span class="step-unit">条</span>
-      </div>
+      <input class="input" type="number" id="memIntervalInput" min="1" placeholder="20" inputmode="numeric">
     </div>
     <div class="block">
       <div class="sub-label" style="display:flex;align-items:center;justify-content:space-between;">
@@ -1315,6 +1390,62 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
       </div>
       <div id="memoryList"></div>
     </div>
+  </div>
+</div>
+
+<div class="page z140" id="todoPickerPage">
+  <div class="page-bar">
+    <div class="page-bar-side">
+      <button class="page-bar-btn" id="todoPickerBack">取消</button>
+    </div>
+    <div class="page-bar-title">选择待办</div>
+    <div class="page-bar-side right"></div>
+  </div>
+  <div class="search-bar">
+    <input class="search-input" id="todoPickerSearch" placeholder="搜索待办标题" autocomplete="off" autocapitalize="off" spellcheck="false">
+  </div>
+  <div class="page-body nopad" id="todoPickerList" style="padding:0 16px 28px;"></div>
+</div>
+
+<div class="page z140" id="notePickerPage">
+  <div class="page-bar">
+    <div class="page-bar-side">
+      <button class="page-bar-btn" id="notePickerBack">取消</button>
+    </div>
+    <div class="page-bar-title">选择备忘录</div>
+    <div class="page-bar-side right"></div>
+  </div>
+  <div class="search-bar">
+    <input class="search-input" id="notePickerSearch" placeholder="搜索备忘录" autocomplete="off" autocapitalize="off" spellcheck="false">
+  </div>
+  <div class="page-body nopad" id="notePickerList" style="padding:0 16px 28px;"></div>
+</div>
+
+<div class="plus-backdrop" id="plusBackdrop"></div>
+<div class="plus-panel" id="plusPanel">
+  <div class="plus-handle"></div>
+  <div class="plus-grid">
+    <button class="plus-item" id="plusSendTodo" type="button">
+      <span class="plus-item-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 6l1.6 1.6L7.6 4.6"/>
+          <path d="M3 12.5l1.6 1.6 3-3"/>
+          <path d="M3 19l1.6 1.6 3-3"/>
+          <path d="M11.5 6.5h9.5M11.5 13h9.5M11.5 19.5h9.5"/>
+        </svg>
+      </span>
+      <span class="plus-item-label">发送待办</span>
+    </button>
+    <button class="plus-item" id="plusSendNote" type="button">
+      <span class="plus-item-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 3h8l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/>
+          <path d="M14 3v5h5"/>
+          <path d="M8.6 13h6.8M8.6 17h4.4"/>
+        </svg>
+      </span>
+      <span class="plus-item-label">发送备忘录</span>
+    </button>
   </div>
 </div>
 
@@ -1365,6 +1496,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
 <input type="file" id="avatarInput" accept="image/*" hidden>
 <input type="file" id="aiAvatarInput" accept="image/*" hidden>
 <input type="file" id="importInput" accept=".json,application/json" hidden>
+<input type="file" id="aiImportInput" accept=".json,application/json" hidden>
 
 <script>
 (function () {
@@ -1407,6 +1539,11 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     x.setDate(x.getDate() - dow);
     return x;
   }
+  function tsForFilename() {
+    const d = new Date();
+    return String(d.getFullYear()) + pad(d.getMonth() + 1) + pad(d.getDate()) + '-' +
+           pad(d.getHours()) + pad(d.getMinutes()) + pad(d.getSeconds());
+  }
 
   const CN_NUM = { '零':0,'一':1,'二':2,'两':2,'三':3,'四':4,'五':5,'六':6,'七':7,'八':8,'九':9,'十':10 };
 
@@ -1432,7 +1569,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     let working = input;
     let date = null;
     let time = null;
-    const matched = [];
 
     let m = working.match(/(\d{1,2})\s*[:：]\s*(\d{1,2})/);
     if (m) {
@@ -1440,7 +1576,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
       const mi = parseInt(m[2], 10);
       if (h >= 0 && h < 24 && mi >= 0 && mi < 60) {
         time = pad(h) + ':' + pad(mi);
-        matched.push(m[0]);
         working = working.replace(m[0], ' ');
       }
     }
@@ -1457,7 +1592,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
           }
           if (h >= 0 && h < 24 && mi >= 0 && mi < 60) {
             time = pad(h) + ':' + pad(mi);
-            matched.push(m[0]);
             working = working.replace(m[0], ' ');
           }
         }
@@ -1470,7 +1604,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
         const d = new Date(today);
         d.setDate(d.getDate() + dayMap[m[0]]);
         date = dateKey(d);
-        matched.push(m[0]);
         working = working.replace(m[0], ' ');
       }
     }
@@ -1488,7 +1621,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
         const d = new Date(today);
         d.setDate(d.getDate() + diff);
         date = dateKey(d);
-        matched.push(m[0]);
         working = working.replace(m[0], ' ');
       }
     }
@@ -1501,7 +1633,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
           let d = new Date(today.getFullYear(), mo - 1, dd);
           if (d < today) d = new Date(today.getFullYear() + 1, mo - 1, dd);
           date = dateKey(d);
-          matched.push(m[0]);
           working = working.replace(m[0], ' ');
         }
       }
@@ -1515,7 +1646,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
           let d = new Date(today.getFullYear(), mo - 1, dd);
           if (d < today) d = new Date(today.getFullYear() + 1, mo - 1, dd);
           date = dateKey(d);
-          matched.push(m[0]);
           working = working.replace(m[0], ' ');
         }
       }
@@ -1576,7 +1706,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
   }
 
   const DEFAULT_DATA = {
-    version: 7,
+    version: 8,
     user: { name: '', avatar: '', signature: '' },
     groups: [],
     todos: [],
@@ -2314,7 +2444,9 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
         !$('#aiChatPage').classList.contains('show') &&
         !$('#aiSettingsPage').classList.contains('show') &&
         !$('#aiMemoryPage').classList.contains('show') &&
-        !$('#groupDetailPage').classList.contains('show')) {
+        !$('#groupDetailPage').classList.contains('show') &&
+        !$('#todoPickerPage').classList.contains('show') &&
+        !$('#notePickerPage').classList.contains('show')) {
       document.body.classList.remove('locked');
     }
     teId = null;
@@ -2860,7 +2992,9 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
         !$('#aiChatPage').classList.contains('show') &&
         !$('#aiSettingsPage').classList.contains('show') &&
         !$('#aiMemoryPage').classList.contains('show') &&
-        !$('#groupDetailPage').classList.contains('show')) {
+        !$('#groupDetailPage').classList.contains('show') &&
+        !$('#todoPickerPage').classList.contains('show') &&
+        !$('#notePickerPage').classList.contains('show')) {
       document.body.classList.remove('locked');
     }
     neId = null;
@@ -3144,20 +3278,23 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     } catch (err) { toast('图片读取失败'); }
   });
 
+  function downloadBlob(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1500);
+  }
+
   function exportData() {
     const payload = clone(db);
     payload.app = 'task-hub';
     payload.exportedAt = new Date().toISOString();
     const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const d = new Date();
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'taskhub-' + d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate()) + '.json';
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 1500);
+    downloadBlob(blob, 'taskhub-' + tsForFilename() + '.json');
     toast('已导出');
   }
 
@@ -3658,6 +3795,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     };
   }
 
+  /* ============ AI 聊天 ============ */
   let chatEditMode = false;
   let chatEditId = null;
   let chatSelectMode = false;
@@ -3729,6 +3867,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     const inputBar = $('#chatInputBar');
     const title = $('#chatActionTitle');
     const done = $('#chatActionDone');
+    const delFrom = $('#chatActionDeleteFrom');
 
     if (chatSelectMode) {
       bar.style.display = 'flex';
@@ -3739,6 +3878,9 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
       done.classList.add('danger');
       done.disabled = chatSelected.size === 0;
       done.style.opacity = chatSelected.size === 0 ? '.35' : '1';
+      delFrom.style.display = '';
+      delFrom.disabled = chatSelected.size === 0;
+      delFrom.style.opacity = chatSelected.size === 0 ? '.35' : '1';
     } else if (chatEditMode) {
       bar.style.display = 'flex';
       inputBar.style.display = 'none';
@@ -3748,9 +3890,11 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
       done.classList.add('strong');
       done.disabled = false;
       done.style.opacity = '1';
+      delFrom.style.display = 'none';
     } else {
       bar.style.display = 'none';
       inputBar.style.display = 'flex';
+      delFrom.style.display = 'none';
     }
   }
 
@@ -3905,6 +4049,20 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     }
   });
 
+  $('#chatActionDeleteFrom').addEventListener('click', () => {
+    if (!chatSelectMode || !chatSelected.size) return;
+    let minIdx = Infinity;
+    db.chat.forEach((m, i) => {
+      if (chatSelected.has(m.id) && i < minIdx) minIdx = i;
+    });
+    if (minIdx === Infinity) return;
+    const removed = db.chat.length - minIdx;
+    db.chat = db.chat.slice(0, minIdx);
+    save();
+    exitSelectMode();
+    toast('已删除 ' + removed + ' 条消息');
+  });
+
   function normalizeChatURL(endpoint) {
     let url = (endpoint || '').trim().replace(/\/+$/, '');
     if (!url) return '';
@@ -3951,7 +4109,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     return '';
   }
 
-  function buildChatMessages() {
+  function buildChatMessages(extraMessage) {
     const msgs = [];
     let systemContent = '';
     if (db.ai.persona) systemContent += db.ai.persona;
@@ -3966,7 +4124,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     }
     if (systemContent) msgs.push({ role: 'system', content: systemContent });
 
-    const ctxCount = Math.max(1, Math.min(50, parseInt(db.ai.contextCount, 10) || 10));
+    const ctxCount = Math.max(1, parseInt(db.ai.contextCount, 10) || 10);
     const recent = db.chat.slice(-ctxCount);
     for (const m of recent) {
       if (m.role === 'user' || m.role === 'ai') {
@@ -3976,6 +4134,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
         });
       }
     }
+    if (extraMessage) msgs.push(extraMessage);
     return msgs;
   }
 
@@ -3985,17 +4144,10 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     renderChat();
   }
 
-  async function sendChat() {
-    if (aiSending) return;
-    const inp = $('#chatInput');
-    const text = inp.value.trim();
-    if (!text) return;
-
+  function pushUserMessage(text) {
     db.chat.push({ id: uid(), role: 'user', text, ts: Date.now() });
-    inp.value = '';
     save();
     renderChat();
-
     if (db.aiMemory.enabled) {
       db.aiMemory.msgCounter = (db.aiMemory.msgCounter || 0) + 1;
       const interval = Math.max(1, db.aiMemory.summaryInterval || 20);
@@ -4005,21 +4157,26 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
       }
       save();
     }
+  }
 
+  async function requestAiReply(extraMessage) {
+    if (aiSending) return;
     if (!db.ai.endpoint) { addAiMessage('请先在 AI 设置中填写接口地址。'); return; }
     if (!db.ai.apiKey) { addAiMessage('请先在 AI 设置中填写 API Key。'); return; }
     if (!db.ai.model) { addAiMessage('请先在 AI 设置中选择模型。'); return; }
 
     aiSending = true;
     const sendBtn = $('#chatSend');
+    const proBtn = $('#chatProactiveBtn');
     sendBtn.disabled = true;
+    proBtn.disabled = true;
 
     aiTyping = true;
     renderChat();
 
     let replyText = '';
     try {
-      const messages = buildChatMessages();
+      const messages = buildChatMessages(extraMessage);
       const url = normalizeChatURL(db.ai.endpoint);
       const res = await fetch(url, {
         method: 'POST',
@@ -4054,7 +4211,25 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     aiTyping = false;
     aiSending = false;
     sendBtn.disabled = false;
+    proBtn.disabled = false;
     addAiMessage(replyText);
+  }
+
+  async function sendChat() {
+    const inp = $('#chatInput');
+    const text = inp.value.trim();
+    if (!text) return;
+    inp.value = '';
+    pushUserMessage(text);
+    await requestAiReply();
+  }
+
+  async function sendProactive() {
+    if (aiSending) return;
+    await requestAiReply({
+      role: 'user',
+      content: '[请主动说一句自然、简洁的话，可以是问候、延续当前话题，或对最近的待办和备忘做一个简短提醒。不要复述这段指令。]'
+    });
   }
 
   function autoSummarize() {
@@ -4088,6 +4263,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
   function closeAiChat() {
     if (chatEditMode) saveEdit();
     if (chatSelectMode) exitSelectMode();
+    closePlusPanel();
     $('#aiChatPage').classList.remove('show');
     if (!$('#todoEditor').classList.contains('show') &&
         !$('#noteEditor').classList.contains('show') &&
@@ -4095,7 +4271,9 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
         !$('#periodPage').classList.contains('show') &&
         !$('#aiSettingsPage').classList.contains('show') &&
         !$('#aiMemoryPage').classList.contains('show') &&
-        !$('#groupDetailPage').classList.contains('show')) {
+        !$('#groupDetailPage').classList.contains('show') &&
+        !$('#todoPickerPage').classList.contains('show') &&
+        !$('#notePickerPage').classList.contains('show')) {
       document.body.classList.remove('locked');
     }
   }
@@ -4103,11 +4281,152 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
   $('#rowAiChat').addEventListener('click', openAiChat);
   $('#aiChatBack').addEventListener('click', closeAiChat);
   $('#chatSend').addEventListener('click', sendChat);
+  $('#chatProactiveBtn').addEventListener('click', sendProactive);
   $('#chatInput').addEventListener('keydown', e => {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); }
   });
   $('#aiChatSettings').addEventListener('click', () => { openAiSettings(); });
 
+  /* ============ 加号面板 ============ */
+  function openPlusPanel() {
+    $('#plusBackdrop').classList.add('show');
+    $('#plusPanel').classList.add('show');
+  }
+  function closePlusPanel() {
+    $('#plusBackdrop').classList.remove('show');
+    $('#plusPanel').classList.remove('show');
+  }
+  $('#chatPlusBtn').addEventListener('click', openPlusPanel);
+  $('#plusBackdrop').addEventListener('click', closePlusPanel);
+
+  /* ============ 待办选择页 ============ */
+  function openTodoPicker() {
+    closePlusPanel();
+    $('#todoPickerSearch').value = '';
+    renderTodoPickerList('');
+    $('#todoPickerPage').classList.add('show');
+    document.body.classList.add('locked');
+  }
+  function closeTodoPicker() {
+    $('#todoPickerPage').classList.remove('show');
+    if (!$('#aiChatPage').classList.contains('show') &&
+        !$('#todoEditor').classList.contains('show') &&
+        !$('#noteEditor').classList.contains('show') &&
+        !$('#aiSettingsPage').classList.contains('show') &&
+        !$('#aiMemoryPage').classList.contains('show') &&
+        !$('#notePickerPage').classList.contains('show')) {
+      document.body.classList.remove('locked');
+    }
+  }
+  function renderTodoPickerList(q) {
+    q = (q || '').trim().toLowerCase();
+    let list = db.todos.slice();
+    if (q) {
+      list = list.filter(t => (t.title || '').toLowerCase().indexOf(q) >= 0);
+    }
+    list.sort(cmpTodos);
+    const wrap = $('#todoPickerList');
+    if (!list.length) {
+      wrap.innerHTML = '<div class="empty small">' + (q ? '没有匹配的待办' : '还没有待办') + '</div>';
+      return;
+    }
+    wrap.innerHTML = list.map(todoHTML).join('');
+  }
+
+  $('#plusSendTodo').addEventListener('click', openTodoPicker);
+  $('#todoPickerBack').addEventListener('click', closeTodoPicker);
+  $('#todoPickerSearch').addEventListener('input', e => renderTodoPickerList(e.target.value));
+
+  $('#todoPickerList').addEventListener('click', e => {
+    const holder = e.target.closest('[data-id]');
+    if (!holder) return;
+    const t = db.todos.find(x => x.id === holder.dataset.id);
+    if (!t) return;
+    sendTodoToChat(t);
+  });
+
+  function sendTodoToChat(t) {
+    const parts = ['待办'];
+    parts.push('标题：' + (t.title || ''));
+    const timeStr = fmtTimeSummary(t);
+    if (timeStr) parts.push('时间：' + timeStr);
+    const g = db.groups.find(x => x.id === t.groupId);
+    if (g) parts.push('分组：' + g.name);
+    parts.push('优先级：' + (PRI_LABEL[t.priority] || '普通'));
+    parts.push('状态：' + (t.done ? '已完成' : '未完成'));
+    if (t.note) parts.push('备注：' + t.note);
+    const text = parts.join('\n');
+
+    closeTodoPicker();
+    pushUserMessage(text);
+  }
+
+  /* ============ 备忘录选择页 ============ */
+  function openNotePicker() {
+    closePlusPanel();
+    $('#notePickerSearch').value = '';
+    renderNotePickerList('');
+    $('#notePickerPage').classList.add('show');
+    document.body.classList.add('locked');
+  }
+  function closeNotePicker() {
+    $('#notePickerPage').classList.remove('show');
+    if (!$('#aiChatPage').classList.contains('show') &&
+        !$('#todoEditor').classList.contains('show') &&
+        !$('#noteEditor').classList.contains('show') &&
+        !$('#aiSettingsPage').classList.contains('show') &&
+        !$('#aiMemoryPage').classList.contains('show') &&
+        !$('#todoPickerPage').classList.contains('show')) {
+      document.body.classList.remove('locked');
+    }
+  }
+  function renderNotePickerList(q) {
+    q = (q || '').trim().toLowerCase();
+    let list = db.notes.slice();
+    if (q) {
+      list = list.filter(n => {
+        const text = (n.html || '').replace(/<[^>]+>/g, ' ').toLowerCase();
+        return text.indexOf(q) >= 0;
+      });
+    }
+    list.sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+    const wrap = $('#notePickerList');
+    if (!list.length) {
+      wrap.innerHTML = '<div class="empty small">' + (q ? '没有匹配的备忘录' : '还没有备忘录') + '</div>';
+      return;
+    }
+    wrap.innerHTML = list.map(n => {
+      const lines = htmlToLines(n.html);
+      const title = lines[0] || '无标题';
+      const rest = lines.slice(1).join('\n');
+      return '<div class="note" data-nid="' + n.id + '">' +
+        '<div class="note-title">' + esc(title) + '</div>' +
+        (rest ? '<div class="note-preview">' + esc(rest) + '</div>' : '') +
+        '<div class="note-date">' + esc(fmtShort(n.updatedAt)) + '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  $('#plusSendNote').addEventListener('click', openNotePicker);
+  $('#notePickerBack').addEventListener('click', closeNotePicker);
+  $('#notePickerSearch').addEventListener('input', e => renderNotePickerList(e.target.value));
+
+  $('#notePickerList').addEventListener('click', e => {
+    const holder = e.target.closest('[data-nid]');
+    if (!holder) return;
+    const n = db.notes.find(x => x.id === holder.dataset.nid);
+    if (!n) return;
+    sendNoteToChat(n);
+  });
+
+  function sendNoteToChat(n) {
+    const lines = htmlToLines(n.html);
+    const text = lines.length ? lines.join('\n') : '（空备忘录）';
+    closeNotePicker();
+    pushUserMessage(text);
+  }
+
+  /* ============ AI 设置 ============ */
   function renderAiAvatar() {
     const img = $('#aiAvatarImg');
     const ph = $('#aiAvatarPh');
@@ -4173,7 +4492,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     db.ai.endpoint = $('#aiEndpointInput').value.trim();
     db.ai.model = $('#aiModelInput').value.trim();
     db.ai.apiKey = $('#aiKeyInput').value.trim();
-    db.ai.contextCount = Math.max(1, Math.min(50, parseInt($('#aiContextInput').value, 10) || 10));
+    db.ai.contextCount = Math.max(1, parseInt($('#aiContextInput').value, 10) || 10);
     save();
     $('#aiChatTitle').textContent = db.ai.name;
     closeAiSettings();
@@ -4284,6 +4603,49 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     $$('#aiModelList button').forEach(x => x.classList.toggle('active', x === btn));
   });
 
+  /* ============ AI 设定导入导出 ============ */
+  function exportAiSettings() {
+    const payload = {
+      app: 'task-hub',
+      type: 'ai-settings',
+      version: 1,
+      exportedAt: new Date().toISOString(),
+      ai: clone(db.ai)
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    downloadBlob(blob, 'ai-settings-' + tsForFilename() + '.json');
+    toast('已导出 AI 设定');
+  }
+
+  function importAiSettings(file) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const parsed = JSON.parse(reader.result);
+        if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) throw new Error('bad');
+        const src = parsed.ai && typeof parsed.ai === 'object' ? parsed.ai : parsed;
+        db.ai = mergeDeep(clone(DEFAULT_DATA.ai), src);
+        if (!db.ai.contextCount || db.ai.contextCount < 1) db.ai.contextCount = 10;
+        save();
+        openAiSettings();
+        $('#aiChatTitle').textContent = db.ai.name || 'AI 助手';
+        toast('已导入 AI 设定');
+      } catch (e) { toast('文件格式不正确'); }
+    };
+    reader.onerror = () => toast('读取文件失败');
+    reader.readAsText(file);
+  }
+
+  $('#aiExportBtn').addEventListener('click', exportAiSettings);
+  $('#aiImportBtn').addEventListener('click', () => $('#aiImportInput').click());
+  $('#aiImportInput').addEventListener('change', e => {
+    const file = e.target.files && e.target.files[0];
+    e.target.value = '';
+    if (!file) return;
+    confirmDialog('导入 AI 设定', '这会覆盖当前 AI 设定，确定继续吗？', () => importAiSettings(file));
+  });
+
+  /* ============ 记忆管理 ============ */
   function renderMemoryList() {
     const wrap = $('#memoryList');
     const list = db.aiMemory.items.slice().sort((a, b) => (b.ts || 0) - (a.ts || 0));
@@ -4312,7 +4674,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
   }
   function renderMemInterval() {
     const iv = Math.max(1, db.aiMemory.summaryInterval || 20);
-    $('#memIntervalVal').textContent = iv;
+    $('#memIntervalInput').value = iv;
   }
 
   function openMemoryPage() {
@@ -4345,15 +4707,19 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     toast(db.aiMemory.enabled ? '已启用自动记忆' : '已关闭自动记忆');
   });
 
-  $('#memIntervalStep').addEventListener('click', e => {
-    const b = e.target.closest('button[data-step]');
-    if (!b) return;
-    const step = parseInt(b.dataset.step, 10);
-    let iv = Math.max(1, parseInt(db.aiMemory.summaryInterval, 10) || 20);
-    iv = Math.max(1, Math.min(200, iv + step));
-    db.aiMemory.summaryInterval = iv;
+  $('#memIntervalInput').addEventListener('input', e => {
+    const v = parseInt(e.target.value, 10);
+    if (!isNaN(v) && v >= 1) {
+      db.aiMemory.summaryInterval = v;
+      save();
+    }
+  });
+  $('#memIntervalInput').addEventListener('blur', e => {
+    const v = parseInt(e.target.value, 10);
+    const final = (!isNaN(v) && v >= 1) ? v : 20;
+    db.aiMemory.summaryInterval = final;
+    e.target.value = final;
     save();
-    renderMemInterval();
   });
 
   $('#memAddManual').addEventListener('click', () => {
@@ -4432,6 +4798,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
 
   document.addEventListener('click', e => {
     if (e.target.closest('#neContent')) return;
+    if (e.target.closest('#todoPickerList') || e.target.closest('#notePickerList')) return;
 
     const toggle = e.target.closest('[data-act="toggle"]');
     if (toggle) {
@@ -4459,8 +4826,11 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     }
     if ($('#pDlgBackdrop').classList.contains('show')) { closePrompt(); return; }
     if ($('#sheet').classList.contains('show')) { closeSheet(); return; }
+    if ($('#plusPanel').classList.contains('show')) { closePlusPanel(); return; }
     if (chatEditMode) { cancelEdit(); return; }
     if (chatSelectMode) { exitSelectMode(); return; }
+    if ($('#todoPickerPage').classList.contains('show')) { closeTodoPicker(); return; }
+    if ($('#notePickerPage').classList.contains('show')) { closeNotePicker(); return; }
     if ($('#aiMemoryPage').classList.contains('show')) { closeMemoryPage(); return; }
     if ($('#aiSettingsPage').classList.contains('show')) { closeAiSettings(); return; }
     if ($('#aiChatPage').classList.contains('show')) { closeAiChat(); return; }
