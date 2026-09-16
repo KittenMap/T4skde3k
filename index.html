@@ -63,9 +63,7 @@ main{
 .view.active{display:block;}
 
 /* 快速添加 */
-.quick-add{
-  display:flex;gap:8px;align-items:center;padding:4px 0 12px;
-}
+.quick-add{display:flex;gap:8px;align-items:center;padding:4px 0 12px;}
 .quick-input{
   flex:1 1 auto;min-width:0;
   background:var(--card);border:1px solid var(--line-2);
@@ -353,13 +351,23 @@ main{
 .title-input::placeholder{color:var(--text-3);font-weight:500;}
 .te-hint{
   font-size:12.5px;color:var(--text-2);
-  margin:0 0 18px;padding-left:2px;
-  line-height:1.5;
+  margin:0 0 18px;padding-left:2px;line-height:1.5;
 }
 
 .block{margin-bottom:24px;}
 .block-label{font-size:12.5px;color:var(--text-2);letter-spacing:.2px;margin-bottom:10px;padding-left:2px;}
 .sub-label{font-size:12.5px;color:var(--text-2);margin-bottom:8px;padding-left:2px;}
+
+/* 分组标题 */
+.section-divider{
+  display:flex;align-items:center;gap:10px;
+  margin:4px 0 20px;color:var(--text-2);
+  font-size:11.5px;letter-spacing:.6px;font-weight:600;
+}
+.section-divider::before,
+.section-divider::after{
+  content:'';flex:1;height:1px;background:var(--line);
+}
 
 /* 分段控件 */
 .seg{display:flex;background:var(--accent-soft);border-radius:10px;padding:2px;gap:2px;}
@@ -387,6 +395,40 @@ main{
 }
 .input:focus{border-color:var(--text-2);}
 textarea.input{resize:none;line-height:1.55;min-height:76px;}
+
+.input-with-btn{position:relative;}
+.input-with-btn .input{padding-right:64px;}
+.input-btn{
+  position:absolute;right:6px;top:50%;transform:translateY(-50%);
+  font-size:13px;color:var(--text-2);
+  padding:6px 10px;border-radius:8px;
+  transition:background .14s;
+}
+.input-btn:active{background:var(--accent-soft);}
+
+.text-link{
+  font-size:13px;color:var(--text-2);padding:0;
+  transition:opacity .14s;
+}
+.text-link:active{opacity:.5;}
+.text-link:disabled{opacity:.4;pointer-events:none;}
+
+.model-list{
+  margin-top:8px;
+  max-height:220px;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  background:var(--bg);border-radius:10px;
+  border:1px solid var(--line-2);
+}
+.model-list button{
+  width:100%;text-align:left;
+  padding:11px 14px;font-size:14px;
+  color:var(--text);border-bottom:1px solid var(--line);
+  transition:background .14s;
+  word-break:break-all;
+}
+.model-list button:last-child{border-bottom:0;}
+.model-list button:active{background:var(--accent-soft);}
+.model-list button.active{background:var(--accent-soft);font-weight:500;}
 
 .field{margin-bottom:12px;}
 .field:last-child{margin-bottom:0;}
@@ -437,6 +479,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
   font-size:15px;font-weight:500;transition:background .14s;
 }
 .btn-secondary:active{background:var(--accent-soft);}
+.btn-secondary:disabled{opacity:.5;pointer-events:none;}
 .btn-primary{
   flex:1.6 1 0;padding:13px;border-radius:12px;
   background:var(--accent);color:var(--accent-text);
@@ -572,6 +615,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
   box-shadow:0 0 0 2px var(--accent-soft);
   -webkit-user-select:text;user-select:text;
 }
+.msg.typing .msg-bubble{color:var(--text-3);}
 
 /* 选择复选框 */
 .msg-check{
@@ -609,6 +653,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
   font-size:14px;font-weight:500;transition:opacity .14s;
 }
 .chat-send:active{opacity:.8;}
+.chat-send:disabled{opacity:.4;pointer-events:none;}
 
 /* 聊天操作栏 */
 .chat-action-bar{
@@ -881,7 +926,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
       <div class="card-list">
         <button class="row" id="rowAiSettings">
           <span class="row-label">AI 设置</span>
-          <span class="value">称呼 / 人设 / 记忆 <i class="chev">›</i></span>
+          <span class="value">人设 / 接口 / 记忆 <i class="chev">›</i></span>
         </button>
       </div>
 
@@ -1225,9 +1270,13 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
       <textarea class="input" id="aiProfileInput" rows="3" placeholder="你是谁、希望 AI 如何称呼你、偏好等"></textarea>
     </div>
     <div class="block">
+      <div class="sub-label">上下文条数</div>
+      <input class="input" type="number" id="aiContextInput" min="1" max="50" placeholder="10" inputmode="numeric">
+    </div>
+    <div class="block">
       <div class="sub-label">预估使用量</div>
       <div class="token-card">
-        <div class="tk-label">根据当前人设、我的设定与记忆条目粗略估算，每次对话约消耗</div>
+        <div class="tk-label">根据人设、我的设定与记忆条目粗略估算，每次对话约消耗</div>
         <div class="tk-value" id="aiTokenEst">—<small>tokens</small></div>
       </div>
     </div>
@@ -1237,17 +1286,30 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
         <span class="value"><span id="memCountLabel">0 条</span> <i class="chev">›</i></span>
       </button>
     </div>
+
+    <div class="section-divider"><span>API 配置</span></div>
+
     <div class="block">
-      <div class="sub-label">API 接口（预留）</div>
-      <input class="input" id="aiEndpointInput" placeholder="https://api.example.com/v1/chat" autocomplete="off">
-    </div>
-    <div class="block">
-      <div class="sub-label">模型</div>
-      <input class="input" id="aiModelInput" placeholder="例如 gpt-4o-mini" autocomplete="off">
+      <div class="sub-label">接口地址</div>
+      <input class="input" id="aiEndpointInput" placeholder="https://api.openai.com/v1" autocomplete="off" autocapitalize="off" spellcheck="false">
     </div>
     <div class="block">
       <div class="sub-label">API Key</div>
-      <input class="input" id="aiKeyInput" placeholder="sk-..." type="password" autocomplete="off">
+      <div class="input-with-btn">
+        <input class="input" id="aiKeyInput" type="password" placeholder="sk-..." autocomplete="off" autocapitalize="off" spellcheck="false">
+        <button class="input-btn" id="aiKeyToggle" type="button">显示</button>
+      </div>
+    </div>
+    <div class="block">
+      <div class="sub-label" style="display:flex;justify-content:space-between;align-items:center;">
+        <span>模型</span>
+        <button class="text-link" id="aiFetchModels" type="button">获取模型列表</button>
+      </div>
+      <input class="input" id="aiModelInput" placeholder="可手动填写，或点右上获取列表" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <div class="model-list" id="aiModelList" style="display:none;"></div>
+    </div>
+    <div class="block">
+      <button class="btn-secondary" id="aiTestConn" type="button" style="width:100%;">测试连接</button>
     </div>
   </div>
   <div class="page-foot">
@@ -1404,16 +1466,13 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
   function parseQuickText(raw) {
     const input = String(raw || '');
     if (!input.trim()) return { ok: false };
-
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-
     let working = input;
     let date = null;
     let time = null;
     const matched = [];
 
-    // 1) 显式时间 HH:MM
     let m = working.match(/(\d{1,2})\s*[:：]\s*(\d{1,2})/);
     if (m) {
       const h = parseInt(m[1], 10);
@@ -1424,8 +1483,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
         working = working.replace(m[0], ' ');
       }
     }
-
-    // 2) 中文时间：下午三点 / 3点30分 / 晚上8点
     if (!time) {
       const timeRe = /(凌晨|早上|上午|中午|下午|傍晚|晚上|夜里)?\s*([0-9一二三四五六七八九十两]{1,3})\s*[点時时]\s*(?:([0-9一二三四五六七八九十两]{1,3})\s*分?)?/;
       m = working.match(timeRe);
@@ -1434,9 +1491,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
         let mi = m[3] ? cnNum(m[3]) : 0;
         const prefix = m[1] || '';
         if (!isNaN(h) && !isNaN(mi)) {
-          if (prefix === '下午' || prefix === '傍晚' || prefix === '晚上' || prefix === '夜里') {
-            if (h < 12) h += 12;
-          } else if (prefix === '中午') {
+          if (prefix === '下午' || prefix === '傍晚' || prefix === '晚上' || prefix === '夜里' || prefix === '中午') {
             if (h < 12) h += 12;
           }
           if (h >= 0 && h < 24 && mi >= 0 && mi < 60) {
@@ -1447,8 +1502,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
         }
       }
     }
-
-    // 3) 今天 / 明天 / 后天 / 大后天 / 昨天
     if (!date) {
       const dayMap = { '今天':0, '明天':1, '后天':2, '大后天':3, '昨天':-1 };
       m = working.match(/今天|大后天|明天|后天|昨天/);
@@ -1460,8 +1513,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
         working = working.replace(m[0], ' ');
       }
     }
-
-    // 4) 周几 / 星期几 / 礼拜几
     if (!date) {
       m = working.match(/(这|本|下|上)?\s*(?:周|星期|礼拜)\s*([一二三四五六日天])/);
       if (m) {
@@ -1471,11 +1522,8 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
         const curDow = (today.getDay() + 6) % 7;
         const targetDowMon = (targetDow + 6) % 7;
         let diff = (targetDowMon - curDow + 7) % 7;
-        if (prefix === '下') {
-          if (diff === 0) diff = 7;
-        } else if (prefix === '上') {
-          diff = diff === 0 ? -7 : diff - 7;
-        }
+        if (prefix === '下') { if (diff === 0) diff = 7; }
+        else if (prefix === '上') { diff = diff === 0 ? -7 : diff - 7; }
         const d = new Date(today);
         d.setDate(d.getDate() + diff);
         date = dateKey(d);
@@ -1483,8 +1531,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
         working = working.replace(m[0], ' ');
       }
     }
-
-    // 5) 9月20日
     if (!date) {
       m = working.match(/(\d{1,2})\s*月\s*(\d{1,2})\s*[日号]?/);
       if (m) {
@@ -1499,8 +1545,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
         }
       }
     }
-
-    // 6) 9/20 或 9-20
     if (!date) {
       m = working.match(/(\d{1,2})\s*[\/\-]\s*(\d{1,2})/);
       if (m) {
@@ -1520,13 +1564,11 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
 
     let finalDate = date;
     let timeObj;
-
     if (date && time) {
       timeObj = { type: 'datetime', due: date + 'T' + time };
     } else if (date) {
       timeObj = { type: 'date', date: date };
     } else {
-      // 只有时间：默认今天；若已过，则用明天
       let d = new Date(today);
       const h = parseInt(time.slice(0, 2), 10);
       const mi = parseInt(time.slice(3, 5), 10);
@@ -1544,12 +1586,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     else if (date) desc = fmtDay(date) + '（全天）';
     else desc = fmtDay(finalDate) + ' ' + time;
 
-    return {
-      ok: true,
-      title: title,
-      timeObj: timeObj,
-      desc: desc
-    };
+    return { ok: true, title: title, timeObj: timeObj, desc: desc };
   }
 
   function sanitizeHTML(html) {
@@ -1579,7 +1616,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
 
   /* ============ 数据 ============ */
   const DEFAULT_DATA = {
-    version: 6,
+    version: 7,
     user: { name: '', avatar: '', signature: '' },
     groups: [],
     todos: [],
@@ -1587,7 +1624,8 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     chat: [],
     ai: {
       name: 'AI 助手', avatar: '', persona: '', myProfile: '',
-      endpoint: '', model: '', apiKey: ''
+      endpoint: '', model: '', apiKey: '',
+      contextCount: 10
     },
     aiMemory: {
       enabled: true,
@@ -1616,6 +1654,9 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
       merged.aiMemory.items = (merged.aiMemory.items || []).filter(m => m && m.id && m.text);
       if (!merged.aiMemory.summaryInterval || merged.aiMemory.summaryInterval < 1) {
         merged.aiMemory.summaryInterval = 20;
+      }
+      if (!merged.ai.contextCount || merged.ai.contextCount < 1) {
+        merged.ai.contextCount = 10;
       }
       return merged;
     } catch (e) {
@@ -1923,7 +1964,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     el.textContent = msg;
     el.classList.add('show');
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => el.classList.remove('show'), 1500);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 1800);
   }
 
   /* ============ 对话框 ============ */
@@ -1988,16 +2029,11 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     }
     el.innerHTML = html;
   }
-
-  function setWheelValue(el, value) {
-    el.scrollTop = value * WHEEL_ITEM_H;
-  }
-
+  function setWheelValue(el, value) { el.scrollTop = value * WHEEL_ITEM_H; }
   function getWheelValue(el) {
     const idx = Math.round(el.scrollTop / WHEEL_ITEM_H);
     return Math.max(0, Math.min(59, idx));
   }
-
   function updateWheelActive(el) {
     const v = getWheelValue(el);
     $$('.wheel-item', el).forEach((it, i) => {
@@ -2005,7 +2041,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     });
     return v;
   }
-
   function initWheel(el, max) {
     if (el.dataset.init === '1') return;
     el.dataset.init = '1';
@@ -2015,7 +2050,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     padEl.style.flex = '0 0 auto';
     el.insertBefore(padEl.cloneNode(), el.firstChild);
     el.appendChild(padEl.cloneNode());
-
     let scrollTimer = null;
     el.addEventListener('scroll', () => {
       clearTimeout(scrollTimer);
@@ -2026,7 +2060,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
       }, 80);
     }, { passive: true });
   }
-
   function openWheelTime(initial, onOk) {
     let h = 9, m = 0;
     if (initial && /^\d{2}:\d{2}$/.test(initial)) {
@@ -2036,29 +2069,24 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     wheel.hour = h;
     wheel.minute = m;
     wheel.onOk = onOk;
-
     const hEl = $('#wheelHour');
     const mEl = $('#wheelMinute');
     initWheel(hEl, 24);
     initWheel(mEl, 60);
-
     requestAnimationFrame(() => {
       setWheelValue(hEl, h);
       setWheelValue(mEl, m);
       updateWheelActive(hEl);
       updateWheelActive(mEl);
     });
-
     $('#wheelBackdrop').classList.add('show');
     $('#wheelPanel').classList.add('show');
   }
-
   function closeWheelTime() {
     $('#wheelBackdrop').classList.remove('show');
     $('#wheelPanel').classList.remove('show');
     wheel.onOk = null;
   }
-
   $('#wheelCancel').addEventListener('click', closeWheelTime);
   $('#wheelBackdrop').addEventListener('click', closeWheelTime);
   $('#wheelOk').addEventListener('click', () => {
@@ -2232,14 +2260,9 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
   function handleQuickAdd() {
     const inp = $('#quickInput');
     const text = inp.value.trim();
-
-    if (!text) {
-      openTodoEditor(null);
-      return;
-    }
+    if (!text) { openTodoEditor(null); return; }
 
     const result = parseQuickText(text);
-
     if (result.ok) {
       inp.value = '';
       openTodoEditor(null, {
@@ -2279,7 +2302,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     $('#teTitle').value = titleVal;
     $('#teNote').value = t ? (t.note || '') : '';
 
-    // 提示
     const hintEl = $('#teHint');
     if (!t && opts.hint) {
       hintEl.textContent = opts.hint;
@@ -2289,7 +2311,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
       hintEl.style.display = 'none';
     }
 
-    // 时间来源
     let tm;
     if (t && t.time) tm = t.time;
     else if (opts.prefillTime) tm = opts.prefillTime;
@@ -3704,20 +3725,21 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
   let chatLpTimer = null;
   let chatLpStart = null;
   let chatLpFired = false;
+  let aiTyping = false;
+  let aiSending = false;
 
   function renderChat() {
     const body = $('#chatBody');
     const list = db.chat;
-
     body.classList.toggle('select-mode', chatSelectMode);
 
-    if (!list.length) {
+    if (!list.length && !aiTyping) {
       body.innerHTML = '<div class="chat-empty">还没有对话<br>发送一条消息开始</div>';
       updateChatBar();
       return;
     }
 
-    body.innerHTML = list.map(m => {
+    let html = list.map(m => {
       const isUser = m.role === 'user';
       let avatarHTML;
       if (isUser) {
@@ -3743,6 +3765,21 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
       '</div>';
     }).join('');
 
+    if (aiTyping) {
+      let avatarHTML;
+      if (db.ai.avatar) {
+        avatarHTML = '<span class="msg-avatar"><img src="' + esc(db.ai.avatar) + '" alt=""></span>';
+      } else {
+        const initial = (db.ai.name || 'AI').slice(0, 1);
+        avatarHTML = '<span class="msg-avatar">' + esc(initial) + '</span>';
+      }
+      html += '<div class="msg ai typing">' +
+        avatarHTML +
+        '<div class="msg-bubble">正在输入…</div>' +
+      '</div>';
+    }
+
+    body.innerHTML = html;
     body.scrollTop = body.scrollHeight;
     updateChatBar();
   }
@@ -3852,10 +3889,9 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     updateChatBar();
   }
 
-  // 长按进入选择模式
   $('#chatBody').addEventListener('pointerdown', e => {
     const msg = e.target.closest('.msg');
-    if (!msg) return;
+    if (!msg || !msg.dataset.mid) return;
     if (chatSelectMode) return;
     if (chatEditMode && msg.dataset.mid === chatEditId) return;
 
@@ -3886,7 +3922,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     }, { passive: true });
   });
 
-  // 点击聊天消息
   $('#chatBody').addEventListener('click', e => {
     if (chatLpFired) {
       chatLpFired = false;
@@ -3894,14 +3929,13 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
       return;
     }
     const msg = e.target.closest('.msg');
-    if (!msg) return;
+    if (!msg || !msg.dataset.mid) return;
 
     if (chatSelectMode) {
       e.preventDefault();
       toggleSelectMsg(msg.dataset.mid);
       return;
     }
-
     if (chatEditMode) {
       if (msg.dataset.mid !== chatEditId) {
         saveEdit();
@@ -3910,7 +3944,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
       }
       return;
     }
-
     enterEditMode(msg.dataset.mid);
   });
 
@@ -3932,12 +3965,94 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     }
   });
 
-  function sendChat() {
+  /* --- API 工具 --- */
+  function normalizeChatURL(endpoint) {
+    let url = (endpoint || '').trim().replace(/\/+$/, '');
+    if (!url) return '';
+    if (/\/chat\/completions$/i.test(url)) return url;
+    return url + '/chat/completions';
+  }
+
+  function normalizeModelsURL(endpoint) {
+    let url = (endpoint || '').trim().replace(/\/+$/, '');
+    if (!url) return '';
+    url = url.replace(/\/chat\/completions$/i, '');
+    return url + '/models';
+  }
+
+  function extractModels(data) {
+    let arr = [];
+    if (Array.isArray(data)) arr = data;
+    else if (data && Array.isArray(data.data)) arr = data.data;
+    else if (data && Array.isArray(data.models)) arr = data.models;
+    else return [];
+    return arr.map(m => {
+      if (typeof m === 'string') return m;
+      return m.id || m.name || m.model || '';
+    }).filter(Boolean);
+  }
+
+  function extractReply(data) {
+    if (!data) return '';
+    if (Array.isArray(data.choices) && data.choices.length) {
+      const c = data.choices[0];
+      if (c.message && typeof c.message.content === 'string') return c.message.content;
+      if (typeof c.text === 'string') return c.text;
+      if (c.delta && typeof c.delta.content === 'string') return c.delta.content;
+    }
+    if (Array.isArray(data.content)) {
+      const joined = data.content.map(x => (x && typeof x.text === 'string') ? x.text : '').join('');
+      if (joined) return joined;
+    }
+    if (typeof data.reply === 'string') return data.reply;
+    if (typeof data.response === 'string') return data.response;
+    if (typeof data.output === 'string') return data.output;
+    if (typeof data.message === 'string') return data.message;
+    if (data.message && typeof data.message.content === 'string') return data.message.content;
+    return '';
+  }
+
+  function buildChatMessages() {
+    const msgs = [];
+    let systemContent = '';
+    if (db.ai.persona) systemContent += db.ai.persona;
+    if (db.ai.myProfile) {
+      if (systemContent) systemContent += '\n\n';
+      systemContent += '关于用户：\n' + db.ai.myProfile;
+    }
+    if (db.aiMemory.enabled && db.aiMemory.items.length) {
+      if (systemContent) systemContent += '\n\n';
+      systemContent += '需要记住的信息：\n' +
+        db.aiMemory.items.map(m => '- ' + m.text).join('\n');
+    }
+    if (systemContent) msgs.push({ role: 'system', content: systemContent });
+
+    const ctxCount = Math.max(1, Math.min(50, parseInt(db.ai.contextCount, 10) || 10));
+    const recent = db.chat.slice(-ctxCount);
+    for (const m of recent) {
+      if (m.role === 'user' || m.role === 'ai') {
+        msgs.push({
+          role: m.role === 'ai' ? 'assistant' : 'user',
+          content: m.text
+        });
+      }
+    }
+    return msgs;
+  }
+
+  function addAiMessage(text) {
+    db.chat.push({ id: uid(), role: 'ai', text, ts: Date.now() });
+    save();
+    renderChat();
+  }
+
+  async function sendChat() {
+    if (aiSending) return;
     const inp = $('#chatInput');
     const text = inp.value.trim();
     if (!text) return;
 
-    db.chat.push({ id: uid(), role: 'user', text: text, ts: Date.now() });
+    db.chat.push({ id: uid(), role: 'user', text, ts: Date.now() });
     inp.value = '';
     save();
     renderChat();
@@ -3952,17 +4067,56 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
       save();
     }
 
-    setTimeout(() => {
-      let reply;
-      if (db.ai.endpoint) {
-        reply = 'AI 接口已配置，但第一版尚未实际接入。你的消息已保存。';
+    // 检查配置
+    if (!db.ai.endpoint) { addAiMessage('请先在 AI 设置中填写接口地址。'); return; }
+    if (!db.ai.apiKey) { addAiMessage('请先在 AI 设置中填写 API Key。'); return; }
+    if (!db.ai.model) { addAiMessage('请先在 AI 设置中选择模型。'); return; }
+
+    aiSending = true;
+    const sendBtn = $('#chatSend');
+    sendBtn.disabled = true;
+
+    aiTyping = true;
+    renderChat();
+
+    let replyText = '';
+    try {
+      const messages = buildChatMessages();
+      const url = normalizeChatURL(db.ai.endpoint);
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + db.ai.apiKey
+        },
+        body: JSON.stringify({
+          model: db.ai.model,
+          messages: messages,
+          stream: false
+        })
+      });
+
+      if (!res.ok) {
+        if (res.status === 401 || res.status === 403) replyText = 'API Key 无效或权限不足。';
+        else if (res.status === 404) replyText = '接口地址不正确。';
+        else if (res.status === 429) replyText = '请求过于频繁，请稍后再试。';
+        else if (res.status >= 500) replyText = '服务器错误，请稍后重试。';
+        else replyText = '请求失败（' + res.status + '）。';
       } else {
-        reply = 'AI 助手尚未接入接口。\n可以在「AI 设置」中填写称呼、人设、我的设定与接口配置。';
+        let data;
+        try { data = await res.json(); }
+        catch (e) { data = null; }
+        const content = extractReply(data);
+        replyText = content || '没有收到有效回复。';
       }
-      db.chat.push({ id: uid(), role: 'ai', text: reply, ts: Date.now() });
-      save();
-      renderChat();
-    }, 420);
+    } catch (e) {
+      replyText = '请求失败，请检查网络连接。';
+    }
+
+    aiTyping = false;
+    aiSending = false;
+    sendBtn.disabled = false;
+    addAiMessage(replyText);
   }
 
   function autoSummarize() {
@@ -3972,7 +4126,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
       .filter(m => m.role === 'user')
       .map(m => (m.text || '').replace(/\s+/g, ' ').trim())
       .filter(Boolean);
-
     let text;
     if (userTexts.length) {
       const joined = userTexts.join('；');
@@ -4046,9 +4199,14 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     $('#aiNameInput').value = db.ai.name || '';
     $('#aiPersonaInput').value = db.ai.persona || '';
     $('#aiProfileInput').value = db.ai.myProfile || '';
+    $('#aiContextInput').value = db.ai.contextCount || 10;
     $('#aiEndpointInput').value = db.ai.endpoint || '';
     $('#aiModelInput').value = db.ai.model || '';
     $('#aiKeyInput').value = db.ai.apiKey || '';
+    $('#aiKeyInput').type = 'password';
+    $('#aiKeyToggle').textContent = '显示';
+    $('#aiModelList').style.display = 'none';
+    $('#aiModelList').innerHTML = '';
     renderAiAvatar();
     updateTokenEstimate();
     $('#aiSettingsPage').classList.add('show');
@@ -4070,6 +4228,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
   $('#rowAiSettings').addEventListener('click', openAiSettings);
   $('#aiSetBack').addEventListener('click', closeAiSettings);
   $('#aiSetCancel').addEventListener('click', closeAiSettings);
+
   $('#aiSetSave').addEventListener('click', () => {
     db.ai.name = $('#aiNameInput').value.trim() || 'AI 助手';
     db.ai.persona = $('#aiPersonaInput').value.trim();
@@ -4077,6 +4236,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     db.ai.endpoint = $('#aiEndpointInput').value.trim();
     db.ai.model = $('#aiModelInput').value.trim();
     db.ai.apiKey = $('#aiKeyInput').value.trim();
+    db.ai.contextCount = Math.max(1, Math.min(50, parseInt($('#aiContextInput').value, 10) || 10));
     save();
     $('#aiChatTitle').textContent = db.ai.name;
     closeAiSettings();
@@ -4085,6 +4245,13 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
 
   ['#aiPersonaInput', '#aiProfileInput'].forEach(sel => {
     $(sel).addEventListener('input', updateTokenEstimate);
+  });
+
+  $('#aiKeyToggle').addEventListener('click', () => {
+    const inp = $('#aiKeyInput');
+    const isPwd = inp.type === 'password';
+    inp.type = isPwd ? 'text' : 'password';
+    $('#aiKeyToggle').textContent = isPwd ? '隐藏' : '显示';
   });
 
   $('#aiAvatarBtn').addEventListener('click', () => $('#aiAvatarInput').click());
@@ -4097,6 +4264,89 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
       db.ai.avatar = dataUrl;
       save(); renderAiAvatar(); toast('已保存');
     } catch (err) { toast('图片读取失败'); }
+  });
+
+  // 测试连接
+  $('#aiTestConn').addEventListener('click', async () => {
+    const endpoint = $('#aiEndpointInput').value.trim();
+    const key = $('#aiKeyInput').value.trim();
+    if (!endpoint) { toast('请填写接口地址'); return; }
+    if (!key) { toast('请填写 API Key'); return; }
+
+    const btn = $('#aiTestConn');
+    btn.disabled = true;
+    btn.textContent = '测试中…';
+
+    try {
+      const url = normalizeModelsURL(endpoint);
+      const res = await fetch(url, {
+        method: 'GET',
+        headers: { 'Authorization': 'Bearer ' + key }
+      });
+      if (res.ok) toast('连接成功');
+      else if (res.status === 401 || res.status === 403) toast('API Key 无效或权限不足');
+      else if (res.status === 404) toast('接口地址不正确');
+      else if (res.status === 429) toast('请求过于频繁，请稍后再试');
+      else toast('连接失败（' + res.status + '）');
+    } catch (e) {
+      toast('请求失败，请检查网络或地址');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '测试连接';
+    }
+  });
+
+  // 获取模型列表
+  $('#aiFetchModels').addEventListener('click', async () => {
+    const endpoint = $('#aiEndpointInput').value.trim();
+    const key = $('#aiKeyInput').value.trim();
+    if (!endpoint) { toast('请填写接口地址'); return; }
+    if (!key) { toast('请填写 API Key'); return; }
+
+    const btn = $('#aiFetchModels');
+    btn.disabled = true;
+    btn.textContent = '获取中…';
+
+    try {
+      const url = normalizeModelsURL(endpoint);
+      const res = await fetch(url, {
+        headers: { 'Authorization': 'Bearer ' + key }
+      });
+
+      if (!res.ok) {
+        if (res.status === 401 || res.status === 403 || res.status === 404) toast('地址或密钥不对');
+        else toast('获取失败（' + res.status + '）');
+        return;
+      }
+
+      let data;
+      try { data = await res.json(); }
+      catch (e) { toast('返回格式无法识别'); return; }
+
+      const list = extractModels(data);
+      if (!list.length) { toast('没有获取到模型'); return; }
+
+      const wrap = $('#aiModelList');
+      const current = $('#aiModelInput').value.trim();
+      wrap.innerHTML = list.map(m =>
+        '<button type="button" data-model="' + esc(m) + '"' +
+          (m === current ? ' class="active"' : '') + '>' + esc(m) + '</button>'
+      ).join('');
+      wrap.style.display = 'block';
+      toast('已获取 ' + list.length + ' 个模型');
+    } catch (e) {
+      toast('请求失败，请检查网络');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '获取模型列表';
+    }
+  });
+
+  $('#aiModelList').addEventListener('click', e => {
+    const btn = e.target.closest('button[data-model]');
+    if (!btn) return;
+    $('#aiModelInput').value = btn.dataset.model;
+    $$('#aiModelList button').forEach(x => x.classList.toggle('active', x === btn));
   });
 
   /* ============ 记忆管理 ============ */
@@ -4126,7 +4376,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     const el = $('#memToggle');
     el.classList.toggle('on', !!db.aiMemory.enabled);
   }
-
   function renderMemInterval() {
     const iv = Math.max(1, db.aiMemory.summaryInterval || 20);
     $('#memIntervalVal').textContent = iv;
