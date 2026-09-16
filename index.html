@@ -96,6 +96,7 @@ main{
 .chip:active{transform:scale(.96);}
 .chip.active{background:var(--accent);color:var(--accent-text);box-shadow:none;}
 .chip.add{color:var(--text-2);background:var(--accent-soft);box-shadow:none;}
+.chip.manage{color:var(--text-2);background:transparent;box-shadow:none;border:1px dashed var(--line-2);}
 
 .todo{
   display:flex;align-items:flex-start;gap:12px;
@@ -243,7 +244,16 @@ main{
 .row .value{font-size:13.5px;color:var(--text-2);display:flex;align-items:center;gap:4px;}
 .hint{
   text-align:center;font-size:12px;color:var(--text-2);
-  padding:6px 20px 26px;line-height:1.8;
+  padding:6px 20px 8px;line-height:1.8;
+}
+.version{
+  text-align:center;
+  font-size:11px;
+  color:var(--text-3);
+  padding:0 20px 28px;
+  letter-spacing:.3px;
+  user-select:none;
+  -webkit-user-select:none;
 }
 
 .stats-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
@@ -569,6 +579,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
 .cal-cell.selected .pdot.mid,
 .cal-cell.selected .pdot.pred{background:transparent;border-color:#fff;}
 
+/* 聊天 */
 .chat-body{
   flex:1 1 auto;overflow-y:auto;-webkit-overflow-scrolling:touch;
   padding:12px 16px 20px;
@@ -601,6 +612,102 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
   -webkit-user-select:text;user-select:text;
 }
 .msg.typing .msg-bubble{color:var(--text-3);}
+
+/* 卡片气泡（待办 / 备忘录） */
+.msg-bubble.card-bubble{
+  background:var(--card);
+  color:var(--text);
+  border:1px solid var(--line-2);
+  border-radius:12px;
+  padding:0;
+  box-shadow:var(--shadow-sm);
+  white-space:normal;
+  display:flex;
+  align-items:stretch;
+  cursor:pointer;
+  overflow:hidden;
+  transition:background .14s;
+  outline:none;
+}
+.msg.user .msg-bubble.card-bubble{
+  background:var(--card);
+  color:var(--text);
+  border-top-right-radius:5px;
+}
+.msg.ai .msg-bubble.card-bubble{
+  border-top-left-radius:5px;
+  border-top-right-radius:12px;
+}
+.msg-bubble.card-bubble:active{background:#FCFCFD;}
+
+/* 待办卡片：紧凑横条 */
+.msg-bubble.card-bubble.todo-card{
+  max-width:82%;
+  min-width:220px;
+}
+
+/* 备忘录卡片：更高的卡片，展示更多内容 */
+.msg-bubble.card-bubble.note-card{
+  max-width:88%;
+  min-width:240px;
+}
+
+.card-stripe{
+  flex:0 0 auto;
+  width:46px;
+  background:var(--accent-soft);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--text-2);
+}
+.card-stripe svg{width:18px;height:18px;display:block;}
+.card-body{
+  flex:1 1 auto;
+  min-width:0;
+  padding:10px 12px;
+  display:flex;flex-direction:column;justify-content:center;
+}
+.note-card .card-body{
+  padding:12px;
+  justify-content:flex-start;
+}
+.card-title{
+  font-size:14px;
+  font-weight:600;
+  letter-spacing:-.1px;
+  line-height:1.35;
+  color:var(--text);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.card-meta{
+  font-size:11.5px;
+  color:var(--text-2);
+  line-height:1.5;
+  margin-top:3px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.card-preview{
+  font-size:12.5px;
+  color:var(--text-2);
+  line-height:1.55;
+  margin-top:6px;
+  display:-webkit-box;
+  -webkit-line-clamp:3;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+  white-space:pre-wrap;
+  word-break:break-word;
+}
+.card-arrow{
+  flex:0 0 auto;
+  display:flex;align-items:center;
+  padding:0 10px 0 0;
+  color:var(--text-3);
+}
+.card-arrow svg{width:14px;height:14px;display:block;}
 
 .msg-check{
   display:none;flex:0 0 auto;
@@ -661,7 +768,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
 
 .chat-action-bar{
   flex:0 0 auto;display:none;
-  align-items:center;gap:8px;
+  align-items:center;gap:6px;
   padding:10px 12px calc(10px + env(safe-area-inset-bottom));
   border-top:1px solid var(--line);background:var(--bg);
 }
@@ -720,6 +827,56 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
   font-size:11.5px;color:var(--text-2);
   letter-spacing:.2px;white-space:nowrap;
 }
+
+/* 详情行 */
+.detail-title{
+  font-size:20px;font-weight:600;letter-spacing:-.3px;
+  line-height:1.4;color:var(--text);margin:4px 0 20px;
+  word-break:break-word;
+}
+.detail-row{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
+  padding:12px 0;border-bottom:1px solid var(--line);
+  font-size:14.5px;
+}
+.detail-row:last-child{border-bottom:0;}
+.detail-row-label{color:var(--text-2);flex:0 0 auto;}
+.detail-row-value{color:var(--text);text-align:right;word-break:break-word;min-width:0;}
+.detail-block{
+  margin-top:18px;
+  padding-top:16px;
+  border-top:1px solid var(--line);
+}
+.detail-label{font-size:12.5px;color:var(--text-2);margin-bottom:8px;letter-spacing:.2px;}
+.detail-text{
+  font-size:14.5px;line-height:1.65;color:var(--text);
+  white-space:pre-wrap;word-break:break-word;
+}
+
+/* 分组管理 */
+.group-mgmt-row{
+  display:flex;align-items:center;gap:8px;
+  padding:14px 4px;
+  border-bottom:1px solid var(--line);
+}
+.group-mgmt-row:last-of-type{border-bottom:0;}
+.group-mgmt-name{
+  flex:1 1 auto;min-width:0;
+  font-size:15px;color:var(--text);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.group-mgmt-count{
+  font-size:12px;color:var(--text-3);
+  flex:0 0 auto;margin-right:4px;
+}
+.group-mgmt-btn{
+  flex:0 0 auto;font-size:13px;color:var(--text-2);
+  padding:5px 10px;border-radius:8px;
+  background:var(--accent-soft);
+  transition:background .14s;
+}
+.group-mgmt-btn:active{background:var(--line-2);}
+.group-mgmt-btn.danger{color:var(--pri-high);}
 
 .ai-avatar-btn{
   width:64px;height:64px;border-radius:50%;
@@ -829,7 +986,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
 }
 .sheet.show{transform:translateY(0);}
 .sheet-handle{width:36px;height:4px;border-radius:2px;background:var(--line-2);margin:9px auto 4px;}
-.sheet-body{padding:8px 16px 18px;}
+.sheet-body{padding:8px 16px 18px;max-height:70vh;overflow-y:auto;-webkit-overflow-scrolling:touch;}
 .sheet-title{font-size:13px;color:var(--text-2);text-align:center;padding:8px 0 12px;}
 .sheet-btn{
   width:100%;padding:15px;font-size:16px;color:var(--text);
@@ -837,6 +994,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
 }
 .sheet-btn:active{background:var(--accent-soft);}
 .sheet-btn.danger{color:var(--pri-high);}
+.sheet-btn.subtle{color:var(--text-2);}
 
 .wheel-backdrop{
   position:fixed;inset:0;z-index:170;background:rgba(0,0,0,.22);
@@ -988,6 +1146,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
       </div>
 
       <div class="hint">本地存储<br>建议定期导出备份</div>
+      <div class="version" id="versionLabel"></div>
     </section>
 
     <section class="view" id="view-stats">
@@ -1274,9 +1433,20 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
   <div class="chat-action-bar" id="chatActionBar">
     <button class="chat-action-btn" id="chatActionCancel">取消</button>
     <span class="chat-action-title" id="chatActionTitle"></span>
-    <button class="chat-action-btn danger" id="chatActionDeleteFrom" style="display:none">以下全部</button>
-    <button class="chat-action-btn strong" id="chatActionDone">完成</button>
+    <button class="chat-action-btn" id="chatActionSelectAfter">选择以下</button>
+    <button class="chat-action-btn danger" id="chatActionDone">删除</button>
   </div>
+</div>
+
+<div class="page z140" id="chatCardPage">
+  <div class="page-bar">
+    <div class="page-bar-side">
+      <button class="page-bar-btn" id="chatCardBack">返回</button>
+    </div>
+    <div class="page-bar-title" id="chatCardTitle">详情</div>
+    <div class="page-bar-side right"></div>
+  </div>
+  <div class="page-body" id="chatCardBody"></div>
 </div>
 
 <div class="page z140" id="aiSettingsPage">
@@ -1502,6 +1672,9 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
 (function () {
   'use strict';
 
+  /* ============ 版本号（改动时只改这一处） ============ */
+  const APP_VERSION = 'v1.0.2';
+
   const STORAGE_KEY = 'task-hub-v1';
   const PRI_LABEL = { normal: '普通', mid: '中', high: '高' };
   const PRI_RANK  = { high: 0, mid: 1, normal: 2 };
@@ -1706,7 +1879,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
   }
 
   const DEFAULT_DATA = {
-    version: 8,
+    version: 11,
     user: { name: '', avatar: '', signature: '' },
     groups: [],
     todos: [],
@@ -2180,13 +2353,15 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     if (cb) cb(pad(h) + ':' + pad(m));
   });
 
+  /* ============ 分组 ============ */
   function renderGroups() {
     const el = $('#groupChips');
     let html = '<button class="chip' + (state.activeGroup === 'all' ? ' active' : '') + '" data-g="all">全部</button>';
     db.groups.forEach(g => {
       html += '<button class="chip' + (state.activeGroup === g.id ? ' active' : '') + '" data-g="' + g.id + '">' + esc(g.name) + '</button>';
     });
-    html += '<button class="chip add" data-g="__add">新建分组</button>';
+    html += '<button class="chip add" data-g="__add">新建</button>';
+    html += '<button class="chip manage" data-g="__manage">管理</button>';
     el.innerHTML = html;
   }
 
@@ -2197,7 +2372,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     const chip = e.target.closest('.chip[data-g]');
     if (!chip) return;
     const gid = chip.dataset.g;
-    if (!gid || gid === 'all' || gid === '__add') return;
+    if (!gid || gid === 'all' || gid === '__add' || gid === '__manage') return;
     suppressClick = false;
     clearTimeout(pressTimer);
     pressTimer = setTimeout(() => {
@@ -2218,8 +2393,12 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     if (gid === '__add') {
       promptDialog('新建分组', '', '例如：工作 / 生活 / 代办', v => {
         db.groups.push({ id: uid(), name: v, createdAt: Date.now() });
-        save(); renderGroups(); renderTodos(); toast('已保存');
+        save(); renderGroups(); renderTodos(); renderStats(); toast('已保存');
       });
+      return;
+    }
+    if (gid === '__manage') {
+      openGroupManage();
       return;
     }
     state.activeGroup = gid;
@@ -2230,30 +2409,127 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
   function openGroupActions(gid) {
     const g = db.groups.find(x => x.id === gid);
     if (!g) return;
+    const n = db.todos.filter(t => t.groupId === gid).length;
     openSheet(
-      '<div class="sheet-title">' + esc(g.name) + '</div>' +
+      '<div class="sheet-title">' + esc(g.name) + ' · ' + n + ' 个待办</div>' +
       '<button class="sheet-btn" id="gRename">重命名</button>' +
       '<button class="sheet-btn danger" id="gDelete">删除分组</button>' +
-      '<button class="sheet-btn" id="gCancel" style="color:var(--text-2)">取消</button>'
+      '<button class="sheet-btn subtle" id="gCancel">取消</button>'
     );
     $('#gRename').onclick = () => {
       closeSheet();
       promptDialog('重命名分组', g.name, '', v => {
-        g.name = v; save(); renderGroups(); renderTodos(); toast('已保存');
+        g.name = v; save(); renderGroups(); renderTodos(); renderStats(); toast('已保存');
       });
     };
     $('#gDelete').onclick = () => {
       closeSheet();
-      confirmDialog('删除分组', '组内待办会变为未分组，不会被删除。', () => {
-        db.groups = db.groups.filter(x => x.id !== gid);
-        db.todos.forEach(t => { if (t.groupId === gid) t.groupId = null; });
-        if (state.activeGroup === gid) state.activeGroup = 'all';
-        save(); renderAll(); toast('已删除');
-      });
+      requestDeleteGroup(gid);
     };
     $('#gCancel').onclick = closeSheet;
   }
 
+  function openGroupManage() {
+    let html = '<div class="sheet-title">分组管理</div>';
+    if (!db.groups.length) {
+      html += '<div style="text-align:center;color:var(--text-3);font-size:13.5px;padding:22px 0 24px;">还没有分组</div>';
+    } else {
+      html += db.groups.map(g => {
+        const n = db.todos.filter(t => t.groupId === g.id).length;
+        return '<div class="group-mgmt-row" data-gid="' + g.id + '">' +
+          '<span class="group-mgmt-name">' + esc(g.name) + '</span>' +
+          '<span class="group-mgmt-count">' + n + ' 个</span>' +
+          '<button class="group-mgmt-btn" data-gact="rename">重命名</button>' +
+          '<button class="group-mgmt-btn danger" data-gact="delete">删除</button>' +
+        '</div>';
+      }).join('');
+    }
+    html += '<button class="sheet-btn subtle" id="gmAdd" style="margin-top:8px;">新建分组</button>';
+    html += '<button class="sheet-btn subtle" id="gmClose">关闭</button>';
+    openSheet(html);
+
+    const addBtn = $('#gmAdd');
+    if (addBtn) addBtn.onclick = () => {
+      closeSheet();
+      promptDialog('新建分组', '', '例如：工作 / 生活 / 代办', v => {
+        db.groups.push({ id: uid(), name: v, createdAt: Date.now() });
+        save(); renderGroups(); renderTodos(); renderStats(); toast('已保存');
+        openGroupManage();
+      });
+    };
+
+    const closeBtn = $('#gmClose');
+    if (closeBtn) closeBtn.onclick = closeSheet;
+  }
+
+  $('#sheetBody').addEventListener('click', e => {
+    const btn = e.target.closest('[data-gact]');
+    if (!btn) return;
+    const row = btn.closest('[data-gid]');
+    if (!row) return;
+    const gid = row.dataset.gid;
+    const g = db.groups.find(x => x.id === gid);
+    if (!g) return;
+    const act = btn.dataset.gact;
+
+    if (act === 'rename') {
+      closeSheet();
+      promptDialog('重命名分组', g.name, '', v => {
+        g.name = v; save(); renderGroups(); renderTodos(); renderStats(); toast('已保存');
+        openGroupManage();
+      });
+    } else if (act === 'delete') {
+      closeSheet();
+      requestDeleteGroup(gid);
+    }
+  });
+
+  function requestDeleteGroup(gid) {
+    const g = db.groups.find(x => x.id === gid);
+    if (!g) return;
+    const n = db.todos.filter(t => t.groupId === gid).length;
+
+    if (!n) {
+      confirmDialog('删除分组', '确定删除「' + g.name + '」吗？', () => {
+        doDeleteGroup(gid, 'move');
+      });
+      return;
+    }
+
+    openSheet(
+      '<div class="sheet-title">删除「' + esc(g.name) + '」</div>' +
+      '<div style="text-align:center;color:var(--text-2);font-size:13.5px;padding:0 8px 16px;line-height:1.7;">' +
+        '组内还有 ' + n + ' 个待办，请选择如何处理' +
+      '</div>' +
+      '<button class="sheet-btn" id="gdMove">移到未分组</button>' +
+      '<button class="sheet-btn danger" id="gdDelAll">连同待办一起删除</button>' +
+      '<button class="sheet-btn subtle" id="gdCancel">取消</button>'
+    );
+    $('#gdMove').onclick = () => { closeSheet(); doDeleteGroup(gid, 'move'); };
+    $('#gdDelAll').onclick = () => {
+      closeSheet();
+      confirmDialog('确认删除', '将删除分组和组内 ' + n + ' 个待办，且无法恢复。', () => {
+        doDeleteGroup(gid, 'delete');
+      });
+    };
+    $('#gdCancel').onclick = closeSheet;
+  }
+
+  function doDeleteGroup(gid, mode) {
+    if (mode === 'delete') {
+      db.todos = db.todos.filter(t => t.groupId !== gid);
+    } else {
+      db.todos.forEach(t => { if (t.groupId === gid) t.groupId = null; });
+    }
+    db.groups = db.groups.filter(x => x.id !== gid);
+    if (state.activeGroup === gid) state.activeGroup = 'all';
+    save();
+    renderAll();
+    renderStats();
+    toast('已删除');
+  }
+
+  /* ============ 待办渲染 ============ */
   function sortKey(t) {
     const tm = t.time || {};
     switch (tm.type) {
@@ -2446,7 +2722,8 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
         !$('#aiMemoryPage').classList.contains('show') &&
         !$('#groupDetailPage').classList.contains('show') &&
         !$('#todoPickerPage').classList.contains('show') &&
-        !$('#notePickerPage').classList.contains('show')) {
+        !$('#notePickerPage').classList.contains('show') &&
+        !$('#chatCardPage').classList.contains('show')) {
       document.body.classList.remove('locked');
     }
     teId = null;
@@ -2831,7 +3108,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
       });
     }
 
-    save(); closeTodoEditor(); renderAll(); toast('已保存');
+    save(); closeTodoEditor(); renderAll(); renderStats(); toast('已保存');
   });
 
   $('#teCancel').addEventListener('click', closeTodoEditor);
@@ -2840,10 +3117,11 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     const id = teId;
     confirmDialog('删除待办', '删除后无法恢复。', () => {
       db.todos = db.todos.filter(x => x.id !== id);
-      save(); closeTodoEditor(); renderAll(); toast('已删除');
+      save(); closeTodoEditor(); renderAll(); renderStats(); toast('已删除');
     });
   });
 
+  /* ============ 日历 ============ */
   function dayDotClass(key) {
     const list = db.todos.filter(t => todoOccursOn(t, key));
     if (!list.length) return null;
@@ -2935,6 +3213,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     renderCalendar();
   });
 
+  /* ============ 备忘录 ============ */
   function renderNotes() {
     const wrap = $('#notesList');
     const list = db.notes.slice().sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
@@ -2994,7 +3273,8 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
         !$('#aiMemoryPage').classList.contains('show') &&
         !$('#groupDetailPage').classList.contains('show') &&
         !$('#todoPickerPage').classList.contains('show') &&
-        !$('#notePickerPage').classList.contains('show')) {
+        !$('#notePickerPage').classList.contains('show') &&
+        !$('#chatCardPage').classList.contains('show')) {
       document.body.classList.remove('locked');
     }
     neId = null;
@@ -3162,6 +3442,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     if ($('#noteEditor').classList.contains('show')) updateToolbarState();
   });
 
+  /* ============ 我的 ============ */
   function renderMe() {
     const nameEl = $('#nameBtn');
     if (db.user.name) {
@@ -3342,6 +3623,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     });
   });
 
+  /* ============ 统计 ============ */
   function renderStats() {
     const now = new Date();
     const start = startOfWeek(now);
@@ -3454,6 +3736,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
   }
   $('#groupDetailBack').addEventListener('click', closeGroupDetail);
 
+  /* ============ 搜索 ============ */
   function openSearch() {
     $('#searchInput').value = '';
     $('#searchResults').innerHTML = '<div class="search-empty">输入关键词开始搜索</div>';
@@ -3552,6 +3835,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     }
   });
 
+  /* ============ 经期 ============ */
   function periodRanges() {
     const recs = db.period.records.slice().sort((a, b) => a.date < b.date ? -1 : 1);
     const ranges = [];
@@ -3744,7 +4028,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
       html += '<button class="sheet-btn" id="pActStart">标记为经期开始</button>' +
               '<button class="sheet-btn" id="pActEnd">标记为经期结束</button>';
     }
-    html += '<button class="sheet-btn" id="pActCancel" style="color:var(--text-2)">取消</button>';
+    html += '<button class="sheet-btn subtle" id="pActCancel">取消</button>';
     openSheet(html);
 
     const cancel = $('#pActCancel');
@@ -3795,7 +4079,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     };
   }
 
-  /* ============ AI 聊天 ============ */
+  /* ============ 聊天 ============ */
   let chatEditMode = false;
   let chatEditId = null;
   let chatSelectMode = false;
@@ -3805,6 +4089,50 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
   let chatLpFired = false;
   let aiTyping = false;
   let aiSending = false;
+
+  function todoCardHTML(c) {
+    const metaParts = [];
+    if (c.timeStr) metaParts.push(c.timeStr);
+    if (c.groupName) metaParts.push(c.groupName);
+    if (c.done) metaParts.push('已完成');
+    let meta = metaParts.join(' · ');
+    if (!meta) meta = '待办';
+
+    return '' +
+      '<div class="card-stripe">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">' +
+          '<path d="M3 6l1.6 1.6L7.6 4.6"/>' +
+          '<path d="M3 12.5l1.6 1.6 3-3"/>' +
+          '<path d="M3 19l1.6 1.6 3-3"/>' +
+          '<path d="M11.5 6.5h9.5M11.5 13h9.5M11.5 19.5h9.5"/>' +
+        '</svg>' +
+      '</div>' +
+      '<div class="card-body">' +
+        '<div class="card-title">' + esc(c.title || '') + '</div>' +
+        '<div class="card-meta">' + esc(meta) + '</div>' +
+      '</div>' +
+      '<div class="card-arrow">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>' +
+      '</div>';
+  }
+
+  function noteCardHTML(c) {
+    return '' +
+      '<div class="card-stripe">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">' +
+          '<path d="M6 3h8l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/>' +
+          '<path d="M14 3v5h5"/>' +
+          '<path d="M8.6 13h6.8M8.6 17h4.4"/>' +
+        '</svg>' +
+      '</div>' +
+      '<div class="card-body">' +
+        '<div class="card-title">' + esc(c.title || '无标题') + '</div>' +
+        (c.preview ? '<div class="card-preview">' + esc(c.preview) + '</div>' : '') +
+      '</div>' +
+      '<div class="card-arrow">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>' +
+      '</div>';
+  }
 
   function renderChat() {
     const body = $('#chatBody');
@@ -3836,10 +4164,23 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
         }
       }
       const selected = chatSelected.has(m.id);
+
+      let bubbleClass = 'msg-bubble';
+      let bubbleContent;
+      if (m.type === 'todo' && m.card) {
+        bubbleClass = 'msg-bubble card-bubble todo-card';
+        bubbleContent = todoCardHTML(m.card);
+      } else if (m.type === 'note' && m.card) {
+        bubbleClass = 'msg-bubble card-bubble note-card';
+        bubbleContent = noteCardHTML(m.card);
+      } else {
+        bubbleContent = esc(m.text);
+      }
+
       return '<div class="msg ' + (isUser ? 'user' : 'ai') + (selected ? ' selected' : '') + '" data-mid="' + m.id + '">' +
         '<span class="msg-check' + (selected ? ' on' : '') + '"></span>' +
         avatarHTML +
-        '<div class="msg-bubble">' + esc(m.text) + '</div>' +
+        '<div class="' + bubbleClass + '">' + bubbleContent + '</div>' +
       '</div>';
     }).join('');
 
@@ -3867,39 +4208,42 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     const inputBar = $('#chatInputBar');
     const title = $('#chatActionTitle');
     const done = $('#chatActionDone');
-    const delFrom = $('#chatActionDeleteFrom');
+    const selAfter = $('#chatActionSelectAfter');
 
     if (chatSelectMode) {
       bar.style.display = 'flex';
       inputBar.style.display = 'none';
       title.textContent = chatSelected.size ? ('已选 ' + chatSelected.size + ' 条') : '未选择';
       done.textContent = '删除';
-      done.classList.remove('strong');
       done.classList.add('danger');
       done.disabled = chatSelected.size === 0;
       done.style.opacity = chatSelected.size === 0 ? '.35' : '1';
-      delFrom.style.display = '';
-      delFrom.disabled = chatSelected.size === 0;
-      delFrom.style.opacity = chatSelected.size === 0 ? '.35' : '1';
+      selAfter.style.display = '';
+      selAfter.disabled = chatSelected.size === 0;
+      selAfter.style.opacity = chatSelected.size === 0 ? '.35' : '1';
     } else if (chatEditMode) {
       bar.style.display = 'flex';
       inputBar.style.display = 'none';
       title.textContent = '编辑消息';
       done.textContent = '完成';
       done.classList.remove('danger');
-      done.classList.add('strong');
       done.disabled = false;
       done.style.opacity = '1';
-      delFrom.style.display = 'none';
+      selAfter.style.display = 'none';
     } else {
       bar.style.display = 'none';
       inputBar.style.display = 'flex';
-      delFrom.style.display = 'none';
+      selAfter.style.display = 'none';
     }
   }
 
   function enterEditMode(id) {
     if (chatSelectMode) return;
+    const m = db.chat.find(x => x.id === id);
+    if (m && m.type && m.type !== 'text') {
+      openChatCardDetail(m);
+      return;
+    }
     chatEditMode = true;
     chatEditId = id;
     const msg = document.querySelector('.msg[data-mid="' + id + '"]');
@@ -4020,6 +4364,15 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
       toggleSelectMsg(msg.dataset.mid);
       return;
     }
+
+    const m = db.chat.find(x => x.id === msg.dataset.mid);
+
+    if (m && m.type && m.type !== 'text') {
+      if (chatEditMode) saveEdit();
+      openChatCardDetail(m);
+      return;
+    }
+
     if (chatEditMode) {
       if (msg.dataset.mid !== chatEditId) {
         saveEdit();
@@ -4036,33 +4389,87 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     else if (chatEditMode) cancelEdit();
   });
 
-  $('#chatActionDone').addEventListener('click', () => {
-    if (chatSelectMode) {
-      const n = chatSelected.size;
-      if (!n) return;
-      db.chat = db.chat.filter(m => !chatSelected.has(m.id));
-      save();
-      exitSelectMode();
-      toast('已删除 ' + n + ' 条消息');
-    } else if (chatEditMode) {
-      saveEdit();
-    }
-  });
-
-  $('#chatActionDeleteFrom').addEventListener('click', () => {
+  $('#chatActionSelectAfter').addEventListener('click', () => {
     if (!chatSelectMode || !chatSelected.size) return;
     let minIdx = Infinity;
     db.chat.forEach((m, i) => {
       if (chatSelected.has(m.id) && i < minIdx) minIdx = i;
     });
     if (minIdx === Infinity) return;
-    const removed = db.chat.length - minIdx;
-    db.chat = db.chat.slice(0, minIdx);
-    save();
-    exitSelectMode();
-    toast('已删除 ' + removed + ' 条消息');
+    for (let i = minIdx; i < db.chat.length; i++) {
+      chatSelected.add(db.chat[i].id);
+    }
+    renderChat();
+    toast('已选择 ' + chatSelected.size + ' 条');
   });
 
+  $('#chatActionDone').addEventListener('click', () => {
+    if (chatSelectMode) {
+      const n = chatSelected.size;
+      if (!n) return;
+      confirmDialog('删除消息', '将删除选中的 ' + n + ' 条消息，删除后无法恢复。', () => {
+        db.chat = db.chat.filter(m => !chatSelected.has(m.id));
+        save();
+        exitSelectMode();
+        toast('已删除 ' + n + ' 条消息');
+      });
+    } else if (chatEditMode) {
+      saveEdit();
+    }
+  });
+
+  /* ============ 卡片详情 ============ */
+  function openChatCardDetail(m) {
+    const c = m.card || {};
+    let html = '';
+
+    if (m.type === 'todo') {
+      $('#chatCardTitle').textContent = '待办详情';
+      html += '<div class="detail-title">' + esc(c.title || '') + '</div>';
+      if (c.timeStr) html += '<div class="detail-row"><span class="detail-row-label">时间</span><span class="detail-row-value">' + esc(c.timeStr) + '</span></div>';
+      if (c.groupName) html += '<div class="detail-row"><span class="detail-row-label">分组</span><span class="detail-row-value">' + esc(c.groupName) + '</span></div>';
+      if (c.priority) html += '<div class="detail-row"><span class="detail-row-label">优先级</span><span class="detail-row-value">' + esc(PRI_LABEL[c.priority] || '普通') + '</span></div>';
+      html += '<div class="detail-row"><span class="detail-row-label">状态</span><span class="detail-row-value">' + (c.done ? '已完成' : '未完成') + '</span></div>';
+      if (c.note) {
+        html += '<div class="detail-block">' +
+          '<div class="detail-label">备注</div>' +
+          '<div class="detail-text">' + esc(c.note) + '</div>' +
+        '</div>';
+      }
+    } else if (m.type === 'note') {
+      $('#chatCardTitle').textContent = '备忘录详情';
+      html += '<div class="detail-title">' + esc(c.title || '无标题') + '</div>';
+      if (c.preview) {
+        html += '<div class="detail-block">' +
+          '<div class="detail-text">' + esc(c.preview) + '</div>' +
+        '</div>';
+      }
+    } else {
+      $('#chatCardTitle').textContent = '详情';
+      html += '<div class="detail-text">' + esc(m.text || '') + '</div>';
+    }
+
+    $('#chatCardBody').innerHTML = html;
+    $('#chatCardPage').classList.add('show');
+    document.body.classList.add('locked');
+  }
+
+  function closeChatCardDetail() {
+    $('#chatCardPage').classList.remove('show');
+    if (!$('#aiChatPage').classList.contains('show') &&
+        !$('#todoEditor').classList.contains('show') &&
+        !$('#noteEditor').classList.contains('show') &&
+        !$('#aiSettingsPage').classList.contains('show') &&
+        !$('#aiMemoryPage').classList.contains('show') &&
+        !$('#todoPickerPage').classList.contains('show') &&
+        !$('#notePickerPage').classList.contains('show')) {
+      document.body.classList.remove('locked');
+    }
+  }
+
+  $('#chatCardBack').addEventListener('click', closeChatCardDetail);
+
+  /* ============ API 工具 ============ */
   function normalizeChatURL(endpoint) {
     let url = (endpoint || '').trim().replace(/\/+$/, '');
     if (!url) return '';
@@ -4144,8 +4551,13 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     renderChat();
   }
 
-  function pushUserMessage(text) {
-    db.chat.push({ id: uid(), role: 'user', text, ts: Date.now() });
+  function pushUserMessage(text, type, card) {
+    const msg = { id: uid(), role: 'user', text: text, ts: Date.now() };
+    if (type && type !== 'text') {
+      msg.type = type;
+      msg.card = card;
+    }
+    db.chat.push(msg);
     save();
     renderChat();
     if (db.aiMemory.enabled) {
@@ -4166,10 +4578,8 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     if (!db.ai.model) { addAiMessage('请先在 AI 设置中选择模型。'); return; }
 
     aiSending = true;
-    const sendBtn = $('#chatSend');
     const proBtn = $('#chatProactiveBtn');
-    sendBtn.disabled = true;
-    proBtn.disabled = true;
+    if (proBtn) proBtn.disabled = true;
 
     aiTyping = true;
     renderChat();
@@ -4210,18 +4620,16 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
 
     aiTyping = false;
     aiSending = false;
-    sendBtn.disabled = false;
-    proBtn.disabled = false;
+    if (proBtn) proBtn.disabled = false;
     addAiMessage(replyText);
   }
 
-  async function sendChat() {
+  function sendChat() {
     const inp = $('#chatInput');
     const text = inp.value.trim();
     if (!text) return;
     inp.value = '';
     pushUserMessage(text);
-    await requestAiReply();
   }
 
   async function sendProactive() {
@@ -4273,7 +4681,8 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
         !$('#aiMemoryPage').classList.contains('show') &&
         !$('#groupDetailPage').classList.contains('show') &&
         !$('#todoPickerPage').classList.contains('show') &&
-        !$('#notePickerPage').classList.contains('show')) {
+        !$('#notePickerPage').classList.contains('show') &&
+        !$('#chatCardPage').classList.contains('show')) {
       document.body.classList.remove('locked');
     }
   }
@@ -4314,7 +4723,8 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
         !$('#noteEditor').classList.contains('show') &&
         !$('#aiSettingsPage').classList.contains('show') &&
         !$('#aiMemoryPage').classList.contains('show') &&
-        !$('#notePickerPage').classList.contains('show')) {
+        !$('#notePickerPage').classList.contains('show') &&
+        !$('#chatCardPage').classList.contains('show')) {
       document.body.classList.remove('locked');
     }
   }
@@ -4346,19 +4756,30 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
   });
 
   function sendTodoToChat(t) {
-    const parts = ['待办'];
-    parts.push('标题：' + (t.title || ''));
-    const timeStr = fmtTimeSummary(t);
-    if (timeStr) parts.push('时间：' + timeStr);
     const g = db.groups.find(x => x.id === t.groupId);
-    if (g) parts.push('分组：' + g.name);
-    parts.push('优先级：' + (PRI_LABEL[t.priority] || '普通'));
-    parts.push('状态：' + (t.done ? '已完成' : '未完成'));
-    if (t.note) parts.push('备注：' + t.note);
-    const text = parts.join('\n');
+    const timeStr = fmtTimeSummary(t);
+    const pri = t.priority || 'normal';
+
+    const contextParts = ['待办'];
+    contextParts.push('标题：' + (t.title || ''));
+    if (timeStr) contextParts.push('时间：' + timeStr);
+    if (g) contextParts.push('分组：' + g.name);
+    contextParts.push('优先级：' + (PRI_LABEL[pri] || '普通'));
+    contextParts.push('状态：' + (t.done ? '已完成' : '未完成'));
+    if (t.note) contextParts.push('备注：' + t.note);
+    const contextText = contextParts.join('\n');
+
+    const card = {
+      title: t.title || '',
+      timeStr: timeStr || '',
+      groupName: g ? g.name : '',
+      priority: pri,
+      note: t.note || '',
+      done: !!t.done
+    };
 
     closeTodoPicker();
-    pushUserMessage(text);
+    pushUserMessage(contextText, 'todo', card);
   }
 
   /* ============ 备忘录选择页 ============ */
@@ -4376,7 +4797,8 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
         !$('#noteEditor').classList.contains('show') &&
         !$('#aiSettingsPage').classList.contains('show') &&
         !$('#aiMemoryPage').classList.contains('show') &&
-        !$('#todoPickerPage').classList.contains('show')) {
+        !$('#todoPickerPage').classList.contains('show') &&
+        !$('#chatCardPage').classList.contains('show')) {
       document.body.classList.remove('locked');
     }
   }
@@ -4421,9 +4843,17 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
 
   function sendNoteToChat(n) {
     const lines = htmlToLines(n.html);
-    const text = lines.length ? lines.join('\n') : '（空备忘录）';
+    const title = lines[0] || '无标题';
+    const rest = lines.slice(1).join('\n');
+    const contextText = '备忘录：\n' + (lines.length ? lines.join('\n') : '（空备忘录）');
+
+    const card = {
+      title: title,
+      preview: rest || ''
+    };
+
     closeNotePicker();
-    pushUserMessage(text);
+    pushUserMessage(contextText, 'note', card);
   }
 
   /* ============ AI 设置 ============ */
@@ -4492,7 +4922,8 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     db.ai.endpoint = $('#aiEndpointInput').value.trim();
     db.ai.model = $('#aiModelInput').value.trim();
     db.ai.apiKey = $('#aiKeyInput').value.trim();
-    db.ai.contextCount = Math.max(1, parseInt($('#aiContextInput').value, 10) || 10);
+    const ctxRaw = parseInt($('#aiContextInput').value, 10);
+    db.ai.contextCount = (!isNaN(ctxRaw) && ctxRaw >= 1) ? ctxRaw : 10;
     save();
     $('#aiChatTitle').textContent = db.ai.name;
     closeAiSettings();
@@ -4762,6 +5193,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     }
   });
 
+  /* ============ 全局渲染 ============ */
   function renderAll() {
     renderGroups();
     renderTodos();
@@ -4799,6 +5231,8 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
   document.addEventListener('click', e => {
     if (e.target.closest('#neContent')) return;
     if (e.target.closest('#todoPickerList') || e.target.closest('#notePickerList')) return;
+    if (e.target.closest('#chatBody')) return;
+    if (e.target.closest('#chatCardPage')) return;
 
     const toggle = e.target.closest('[data-act="toggle"]');
     if (toggle) {
@@ -4827,6 +5261,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     if ($('#pDlgBackdrop').classList.contains('show')) { closePrompt(); return; }
     if ($('#sheet').classList.contains('show')) { closeSheet(); return; }
     if ($('#plusPanel').classList.contains('show')) { closePlusPanel(); return; }
+    if ($('#chatCardPage').classList.contains('show')) { closeChatCardDetail(); return; }
     if (chatEditMode) { cancelEdit(); return; }
     if (chatSelectMode) { exitSelectMode(); return; }
     if ($('#todoPickerPage').classList.contains('show')) { closeTodoPicker(); return; }
@@ -4849,6 +5284,9 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     if (now - lastTouchEnd <= 300) e.preventDefault();
     lastTouchEnd = now;
   }, { passive: false });
+
+  /* ============ 启动 ============ */
+  $('#versionLabel').textContent = APP_VERSION;
 
   renderAll();
   switchTab('todo');
