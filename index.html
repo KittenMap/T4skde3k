@@ -613,7 +613,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
 }
 .msg.typing .msg-bubble{color:var(--text-3);}
 
-/* 卡片气泡（待办 / 备忘录） */
+/* 横条卡片气泡（待办 / 备忘录） */
 .msg-bubble.card-bubble{
   background:var(--card);
   color:var(--text);
@@ -640,13 +640,11 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
 }
 .msg-bubble.card-bubble:active{background:#FCFCFD;}
 
-/* 待办卡片：紧凑横条 */
 .msg-bubble.card-bubble.todo-card{
   max-width:82%;
   min-width:220px;
 }
 
-/* 备忘录卡片：更高的卡片，展示更多内容 */
 .msg-bubble.card-bubble.note-card{
   max-width:88%;
   min-width:240px;
@@ -708,6 +706,79 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
   color:var(--text-3);
 }
 .card-arrow svg{width:14px;height:14px;display:block;}
+
+/* 竖式专注总结卡片 */
+.msg-bubble.card-bubble.focus-card-bubble{
+  display:block;
+  padding:0;
+  max-width:220px;
+  min-width:200px;
+  flex-direction:column;
+}
+.focus-card-inner{
+  width:200px;
+  display:flex;
+  flex-direction:column;
+}
+.focus-card-head{
+  flex:0 0 auto;
+  background:var(--accent-soft);
+  padding:9px 12px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  color:var(--text-2);
+}
+.focus-card-head svg{width:15px;height:15px;display:block;flex:0 0 auto;}
+.focus-card-head .fc-label{
+  font-size:11px;
+  letter-spacing:.4px;
+  font-weight:600;
+}
+.focus-card-body{
+  flex:1 1 auto;
+  padding:14px 12px 12px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+.focus-stat{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+.focus-stat + .focus-stat{
+  margin-top:10px;
+  padding-top:10px;
+  border-top:1px solid var(--line);
+}
+.focus-value{
+  font-size:22px;
+  font-weight:700;
+  letter-spacing:-.6px;
+  line-height:1.1;
+  color:var(--text);
+  font-variant-numeric:tabular-nums;
+}
+.focus-value small{
+  font-size:12px;
+  font-weight:500;
+  color:var(--text-2);
+  margin-left:3px;
+  letter-spacing:0;
+}
+.focus-label{
+  font-size:11.5px;
+  color:var(--text-2);
+  letter-spacing:.1px;
+}
+.focus-card-foot{
+  flex:0 0 auto;
+  padding:0 12px 10px;
+  font-size:11px;
+  color:var(--text-3);
+  letter-spacing:.2px;
+}
 
 .msg-check{
   display:none;flex:0 0 auto;
@@ -851,6 +922,25 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
 .detail-text{
   font-size:14.5px;line-height:1.65;color:var(--text);
   white-space:pre-wrap;word-break:break-word;
+}
+.detail-stat-row{
+  display:grid;grid-template-columns:1fr 1fr;gap:12px;
+  margin-top:6px;
+}
+.detail-stat-box{
+  background:var(--card);border:1px solid var(--line-2);
+  border-radius:12px;padding:16px 14px;
+}
+.detail-stat-num{
+  font-size:26px;font-weight:700;letter-spacing:-.6px;
+  line-height:1.1;font-variant-numeric:tabular-nums;
+}
+.detail-stat-num small{
+  font-size:13px;font-weight:500;color:var(--text-2);
+  margin-left:3px;letter-spacing:0;
+}
+.detail-stat-label{
+  font-size:12px;color:var(--text-2);margin-top:6px;letter-spacing:.2px;
 }
 
 /* 分组管理 */
@@ -1043,10 +1133,82 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
   font-size:13px;letter-spacing:.1px;padding:8px 18px;
   border-radius:999px;opacity:0;pointer-events:none;
   transition:opacity .2s,transform .26s cubic-bezier(.32,.72,0,1);
-  z-index:300;max-width:80vw;white-space:nowrap;
+  z-index:400;max-width:80vw;white-space:nowrap;
   overflow:hidden;text-overflow:ellipsis;
 }
 .toast.show{opacity:1;transform:translate(-50%,0);}
+
+/* 顶部通知横幅 */
+.notif-banner{
+  position:fixed;
+  left:50%;
+  top:calc(env(safe-area-inset-top, 0px) + 10px);
+  transform:translate(-50%,-160%);
+  width:calc(100% - 24px);
+  max-width:600px;
+  background:rgba(255,255,255,.96);
+  -webkit-backdrop-filter:saturate(180%) blur(20px);
+  backdrop-filter:saturate(180%) blur(20px);
+  border-radius:16px;
+  box-shadow:0 8px 32px rgba(0,0,0,.10), 0 2px 6px rgba(0,0,0,.04);
+  padding:14px 16px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  z-index:350;
+  transition:transform .42s cubic-bezier(.32,.72,0,1), opacity .28s;
+  opacity:0;
+  cursor:pointer;
+  user-select:none;
+  -webkit-user-select:none;
+  touch-action:pan-x;
+}
+.notif-banner.show{
+  transform:translate(-50%,0);
+  opacity:1;
+}
+.notif-banner.dragging{
+  transition:none;
+}
+.notif-icon{
+  flex:0 0 auto;
+  width:38px;height:38px;border-radius:11px;
+  background:var(--accent-soft);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--text);
+}
+.notif-icon svg{width:20px;height:20px;display:block;}
+.notif-main{
+  flex:1 1 auto;min-width:0;
+}
+.notif-title{
+  font-size:14.5px;
+  font-weight:600;
+  letter-spacing:-.1px;
+  color:var(--text);
+  line-height:1.35;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.notif-meta{
+  font-size:12.5px;
+  color:var(--text-2);
+  margin-top:3px;
+  line-height:1.4;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.notif-meta.overdue{color:var(--pri-high);font-weight:500;}
+.notif-dot{
+  width:6px;height:6px;border-radius:50%;
+  display:inline-block;
+  flex:0 0 auto;
+}
+.notif-dot.high{background:var(--pri-high);}
+.notif-dot.mid{background:var(--pri-mid);}
+.notif-dot.normal{background:var(--pri-normal);}
 </style>
 </head>
 <body>
@@ -1616,6 +1778,15 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
       </span>
       <span class="plus-item-label">发送备忘录</span>
     </button>
+    <button class="plus-item" id="plusSendFocus" type="button">
+      <span class="plus-item-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="8"/>
+          <path d="M12 8v4l2.5 2.5"/>
+        </svg>
+      </span>
+      <span class="plus-item-label">专注总结</span>
+    </button>
   </div>
 </div>
 
@@ -1663,6 +1834,22 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
 
 <div class="toast" id="toast"></div>
 
+<div class="notif-banner" id="notifBanner">
+  <div class="notif-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 3a6 6 0 0 0-6 6v3.5L4.5 15h15L18 12.5V9a6 6 0 0 0-6-6z"/>
+      <path d="M10 18a2 2 0 0 0 4 0"/>
+    </svg>
+  </div>
+  <div class="notif-main">
+    <div class="notif-title" id="notifTitle">待办标题</div>
+    <div class="notif-meta" id="notifMeta">
+      <span class="notif-dot normal"></span>
+      <span>时间</span>
+    </div>
+  </div>
+</div>
+
 <input type="file" id="avatarInput" accept="image/*" hidden>
 <input type="file" id="aiAvatarInput" accept="image/*" hidden>
 <input type="file" id="importInput" accept=".json,application/json" hidden>
@@ -1672,8 +1859,8 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
 (function () {
   'use strict';
 
-  /* ============ 版本号（改动时只改这一处） ============ */
-  const APP_VERSION = 'v1.0.2';
+  /* ============ 版本号 ============ */
+  const APP_VERSION = 'v1.0.3';
 
   const STORAGE_KEY = 'task-hub-v1';
   const PRI_LABEL = { normal: '普通', mid: '中', high: '高' };
@@ -1711,6 +1898,10 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     const dow = (x.getDay() + 6) % 7;
     x.setDate(x.getDate() - dow);
     return x;
+  }
+  function startOfToday() {
+    const d = new Date();
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate());
   }
   function tsForFilename() {
     const d = new Date();
@@ -1879,7 +2070,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
   }
 
   const DEFAULT_DATA = {
-    version: 11,
+    version: 12,
     user: { name: '', avatar: '', signature: '' },
     groups: [],
     todos: [],
@@ -4134,6 +4325,36 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
       '</div>';
   }
 
+  function focusCardHTML(c) {
+    const mins = c.totalMinutes;
+    const doneCount = c.doneCount;
+    const minsHTML = (mins == null || mins === 0)
+      ? '<div class="focus-value">—<small>分钟</small></div>'
+      : '<div class="focus-value">' + mins + '<small>分钟</small></div>';
+
+    return '' +
+      '<div class="focus-card-inner">' +
+        '<div class="focus-card-head">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' +
+            '<circle cx="12" cy="12" r="8"/>' +
+            '<path d="M12 8v4l2.5 2.5"/>' +
+          '</svg>' +
+          '<span class="fc-label">今日专注总结</span>' +
+        '</div>' +
+        '<div class="focus-card-body">' +
+          '<div class="focus-stat">' +
+            minsHTML +
+            '<div class="focus-label">专注总时长</div>' +
+          '</div>' +
+          '<div class="focus-stat">' +
+            '<div class="focus-value">' + doneCount + '<small>个</small></div>' +
+            '<div class="focus-label">完成任务</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="focus-card-foot">番茄钟接入后可显示完整数据</div>' +
+      '</div>';
+  }
+
   function renderChat() {
     const body = $('#chatBody');
     const list = db.chat;
@@ -4173,6 +4394,9 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
       } else if (m.type === 'note' && m.card) {
         bubbleClass = 'msg-bubble card-bubble note-card';
         bubbleContent = noteCardHTML(m.card);
+      } else if (m.type === 'focus' && m.card) {
+        bubbleClass = 'msg-bubble card-bubble focus-card-bubble';
+        bubbleContent = focusCardHTML(m.card);
       } else {
         bubbleContent = esc(m.text);
       }
@@ -4444,6 +4668,27 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
           '<div class="detail-text">' + esc(c.preview) + '</div>' +
         '</div>';
       }
+    } else if (m.type === 'focus') {
+      $('#chatCardTitle').textContent = '专注总结';
+      html += '<div class="detail-title">今日专注总结</div>';
+      const mins = c.totalMinutes;
+      const minsHTML = (mins == null || mins === 0)
+        ? '—<small>分钟</small>'
+        : mins + '<small>分钟</small>';
+      html += '<div class="detail-stat-row">' +
+        '<div class="detail-stat-box">' +
+          '<div class="detail-stat-num">' + minsHTML + '</div>' +
+          '<div class="detail-stat-label">专注总时长</div>' +
+        '</div>' +
+        '<div class="detail-stat-box">' +
+          '<div class="detail-stat-num">' + c.doneCount + '<small>个</small></div>' +
+          '<div class="detail-stat-label">完成任务</div>' +
+        '</div>' +
+      '</div>';
+      html += '<div class="detail-block">' +
+        '<div class="detail-label">说明</div>' +
+        '<div class="detail-text">番茄钟功能接入后，这里会展示更完整的专注数据与当日总结。</div>' +
+      '</div>';
     } else {
       $('#chatCardTitle').textContent = '详情';
       html += '<div class="detail-text">' + esc(m.text || '') + '</div>';
@@ -4516,19 +4761,52 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     return '';
   }
 
-  function buildChatMessages(extraMessage) {
-    const msgs = [];
-    let systemContent = '';
-    if (db.ai.persona) systemContent += db.ai.persona;
+  /* 系统提示词：固定引导语 + 分消息要求 */
+  function buildSystemPrompt() {
+    const lines = [];
+
+    // 固定引导语
+    lines.push('你是一位友善、贴心的助手，可以主动关心用户的状态和感受。');
+    lines.push('');
+    lines.push('对话原则：');
+    lines.push('1. 不要一味只让用户去做任务，适当引导、鼓励用户，留意用户的情绪。');
+    lines.push('2. 允许用户开展新话题，并认真回应用户说的内容。');
+    lines.push('3. 不局限于任务本身，可以聊生活、感受、想法等。');
+    lines.push('');
+    lines.push('输出格式要求：');
+    lines.push('1. 每次回复输出 50–100 字的内容。');
+    lines.push('2. 把内容拆成 3 到 6 条短消息，每条之间用符号 ||| 分隔。');
+    lines.push('   例如：第一句。|||第二句。|||第三句。');
+    lines.push('   前端会按 ||| 把内容切成多条，依次显示出来。');
+    lines.push('3. 输出不要包含思维链、思考过程或任何解释。');
+    lines.push('4. 输出前自己检查一遍，确认条数在 3–6 条、总字数在 50–100 字。');
+    lines.push('');
+
+    // 用户自定义的人设
+    if (db.ai.persona) {
+      lines.push('AI 人设：');
+      lines.push(db.ai.persona);
+      lines.push('');
+    }
     if (db.ai.myProfile) {
-      if (systemContent) systemContent += '\n\n';
-      systemContent += '关于用户：\n' + db.ai.myProfile;
+      lines.push('关于用户：');
+      lines.push(db.ai.myProfile);
+      lines.push('');
     }
     if (db.aiMemory.enabled && db.aiMemory.items.length) {
-      if (systemContent) systemContent += '\n\n';
-      systemContent += '需要记住的信息：\n' +
-        db.aiMemory.items.map(m => '- ' + m.text).join('\n');
+      lines.push('需要记住的信息：');
+      db.aiMemory.items.forEach(m => {
+        lines.push('- ' + m.text);
+      });
+      lines.push('');
     }
+
+    return lines.join('\n');
+  }
+
+  function buildChatMessages(extraMessage) {
+    const msgs = [];
+    const systemContent = buildSystemPrompt();
     if (systemContent) msgs.push({ role: 'system', content: systemContent });
 
     const ctxCount = Math.max(1, parseInt(db.ai.contextCount, 10) || 10);
@@ -4543,6 +4821,49 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     }
     if (extraMessage) msgs.push(extraMessage);
     return msgs;
+  }
+
+  /* 显示 AI 回复：按 ||| 切分多条，前面的快后面的慢 */
+  let pendingTimers = [];
+  function clearPendingTimers() {
+    pendingTimers.forEach(t => clearTimeout(t));
+    pendingTimers = [];
+  }
+
+  function displayAiReply(replyText) {
+    const raw = String(replyText || '').trim();
+    if (!raw) {
+      addAiMessage('没有收到有效回复。');
+      return;
+    }
+
+    let parts = raw.split('|||').map(s => s.trim()).filter(Boolean);
+
+    // 没切出来，或只有一条 → 直接显示
+    if (parts.length <= 1) {
+      addAiMessage(raw);
+      return;
+    }
+
+    // 限制最多 6 条
+    if (parts.length > 6) {
+      const head = parts.slice(0, 5);
+      const tail = parts.slice(5).join(' ');
+      parts = head.concat([tail]);
+    }
+
+    // 逐条显示，间隔递增（前面快、后面慢）
+    let delay = 0;
+    parts.forEach((part, i) => {
+      if (i > 0) {
+        // 每条之间的间隔：400 + i*500 毫秒，逐条拉长
+        delay += 400 + i * 500;
+      }
+      const t = setTimeout(() => {
+        addAiMessage(part);
+      }, delay);
+      pendingTimers.push(t);
+    });
   }
 
   function addAiMessage(text) {
@@ -4578,6 +4899,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     if (!db.ai.model) { addAiMessage('请先在 AI 设置中选择模型。'); return; }
 
     aiSending = true;
+    clearPendingTimers();
     const proBtn = $('#chatProactiveBtn');
     if (proBtn) proBtn.disabled = true;
 
@@ -4621,7 +4943,10 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     aiTyping = false;
     aiSending = false;
     if (proBtn) proBtn.disabled = false;
-    addAiMessage(replyText);
+    renderChat();
+
+    // 按 ||| 切分逐条显示
+    displayAiReply(replyText);
   }
 
   function sendChat() {
@@ -4672,6 +4997,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     if (chatEditMode) saveEdit();
     if (chatSelectMode) exitSelectMode();
     closePlusPanel();
+    clearPendingTimers();
     $('#aiChatPage').classList.remove('show');
     if (!$('#todoEditor').classList.contains('show') &&
         !$('#noteEditor').classList.contains('show') &&
@@ -4855,6 +5181,200 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     closeNotePicker();
     pushUserMessage(contextText, 'note', card);
   }
+
+  /* ============ 专注总结发送 ============ */
+  function getTodayFocusStats() {
+    const start = startOfToday();
+    const startTs = start.getTime();
+    const endTs = startTs + 86400000;
+
+    // 当日完成任务数
+    const doneCount = db.todos.filter(t => t.done && t.completedAt &&
+      t.completedAt >= startTs && t.completedAt < endTs).length;
+
+    // 番茄钟未做，先留空
+    const totalMinutes = null;
+
+    return { totalMinutes: totalMinutes, doneCount: doneCount };
+  }
+
+  function sendFocusSummaryToChat() {
+    closePlusPanel();
+    const stats = getTodayFocusStats();
+    const minsText = (stats.totalMinutes == null || stats.totalMinutes === 0)
+      ? '暂无数据'
+      : (stats.totalMinutes + ' 分钟');
+    const contextText = '今日专注总结\n专注总时长：' + minsText + '\n完成任务：' + stats.doneCount + ' 个';
+
+    const card = {
+      totalMinutes: stats.totalMinutes,
+      doneCount: stats.doneCount
+    };
+
+    pushUserMessage(contextText, 'focus', card);
+  }
+
+  $('#plusSendFocus').addEventListener('click', sendFocusSummaryToChat);
+
+  /* ============ 通知横幅 ============ */
+  const notifState = {
+    showing: false,
+    queue: [],
+    autoTimer: null,
+    dragStartY: 0,
+    dragCurrentY: 0,
+    dragging: false,
+    currentTodoId: null
+  };
+
+  function renderBanner(t) {
+    const titleEl = $('#notifTitle');
+    const metaEl = $('#notifMeta');
+    const overdue = isOverdue(t);
+    const pri = t.priority || 'normal';
+    const timeStr = fmtTimeSummary(t);
+
+    titleEl.textContent = t.title || '待办';
+    metaEl.className = 'notif-meta' + (overdue ? ' overdue' : '');
+    metaEl.innerHTML =
+      '<span class="notif-dot ' + pri + '"></span>' +
+      '<span>' + esc(timeStr || '') + (overdue ? ' · 已过期' : '') + '</span>';
+  }
+
+  function showBanner(t) {
+    const banner = $('#notifBanner');
+    renderBanner(t);
+    notifState.currentTodoId = t.id;
+    banner.style.transform = '';
+    banner.style.opacity = '';
+    banner.classList.add('show');
+    notifState.showing = true;
+
+    clearTimeout(notifState.autoTimer);
+    notifState.autoTimer = setTimeout(() => {
+      hideBanner();
+    }, 4200);
+  }
+
+  function hideBanner() {
+    const banner = $('#notifBanner');
+    banner.classList.remove('show');
+    notifState.showing = false;
+    notifState.currentTodoId = null;
+    clearTimeout(notifState.autoTimer);
+    if (notifState.queue.length) {
+      setTimeout(() => {
+        const next = notifState.queue.shift();
+        showBanner(next);
+      }, 380);
+    }
+  }
+
+  function pushNotif(t) {
+    if (notifState.showing) {
+      notifState.queue.push(t);
+    } else {
+      showBanner(t);
+    }
+  }
+
+  (function bindNotifBanner() {
+    const banner = $('#notifBanner');
+
+    banner.addEventListener('pointerdown', e => {
+      notifState.dragStartY = e.clientY;
+      notifState.dragCurrentY = e.clientY;
+      notifState.dragging = true;
+      banner.classList.add('dragging');
+      clearTimeout(notifState.autoTimer);
+    });
+
+    banner.addEventListener('pointermove', e => {
+      if (!notifState.dragging) return;
+      notifState.dragCurrentY = e.clientY;
+      const dy = notifState.dragCurrentY - notifState.dragStartY;
+      if (dy < 0) {
+        banner.style.transform = 'translate(-50%, ' + dy + 'px)';
+        banner.style.opacity = String(Math.max(0, 1 + dy / 100));
+      }
+    }, { passive: true });
+
+    ['pointerup', 'pointercancel', 'pointerleave'].forEach(ev => {
+      banner.addEventListener(ev, () => {
+        if (!notifState.dragging) return;
+        notifState.dragging = false;
+        banner.classList.remove('dragging');
+        const dy = notifState.dragCurrentY - notifState.dragStartY;
+        if (dy < -40) {
+          banner.style.transform = 'translate(-50%, -160%)';
+          banner.style.opacity = '0';
+          setTimeout(() => {
+            banner.style.transform = '';
+            banner.style.opacity = '';
+            hideBanner();
+          }, 200);
+        } else {
+          banner.style.transform = '';
+          banner.style.opacity = '';
+          notifState.autoTimer = setTimeout(() => hideBanner(), 2500);
+        }
+      });
+    });
+
+    banner.addEventListener('click', () => {
+      if (notifState.dragging) return;
+      const dy = notifState.dragCurrentY - notifState.dragStartY;
+      if (Math.abs(dy) > 8) return;
+      const id = notifState.currentTodoId;
+      hideBanner();
+      if (id) {
+        // 打开待办详情
+        if (!$('#todoEditor').classList.contains('show')) {
+          openTodoEditor(id);
+        }
+      }
+    });
+  })();
+
+  /* 已弹过的待办 ID（本次会话内不重复弹） */
+  const notifShownIds = new Set();
+
+  function checkDueTodos() {
+    const now = new Date();
+    const nowTs = now.getTime();
+    const today = todayKey();
+
+    // 收集所有已到期未弹过的待办，按截止时间排序
+    const dueList = [];
+    db.todos.forEach(t => {
+      if (t.done) return;
+      if (notifShownIds.has(t.id)) return;
+      const tm = t.time || {};
+      let dueTs = null;
+      if (tm.type === 'datetime' && tm.due) {
+        const d = new Date(tm.due.replace('T', ' ').replace(/-/g, '/'));
+        if (!isNaN(d.getTime())) dueTs = d.getTime();
+      } else if (tm.type === 'date' && tm.date) {
+        // 全天任务：当天 9:00 提醒
+        const d = new Date(tm.date + ' 09:00'.replace(/-/g, '/'));
+        if (!isNaN(d.getTime())) dueTs = d.getTime();
+      }
+      if (dueTs != null && dueTs <= nowTs) {
+        dueList.push({ t: t, dueTs: dueTs });
+      }
+    });
+
+    dueList.sort((a, b) => a.dueTs - b.dueTs);
+    dueList.forEach(item => {
+      pushNotif(item.t);
+      notifShownIds.add(item.t.id);
+    });
+  }
+
+  // App 打开时检查一次
+  setTimeout(checkDueTodos, 1200);
+  // 之后每 30 秒检查一次
+  setInterval(checkDueTodos, 30000);
 
   /* ============ AI 设置 ============ */
   function renderAiAvatar() {
