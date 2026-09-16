@@ -1138,7 +1138,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
 }
 .toast.show{opacity:1;transform:translate(-50%,0);}
 
-/* 顶部通知横幅 */
+/* 顶部通知横幅（待办） */
 .notif-banner{
   position:fixed;
   left:50%;
@@ -1209,6 +1209,255 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
 .notif-dot.high{background:var(--pri-high);}
 .notif-dot.mid{background:var(--pri-mid);}
 .notif-dot.normal{background:var(--pri-normal);}
+
+/* AI 消息横幅 */
+.ai-banner{
+  position:fixed;
+  left:50%;
+  top:calc(env(safe-area-inset-top, 0px) + 10px);
+  transform:translate(-50%,-160%);
+  width:calc(100% - 24px);
+  max-width:600px;
+  background:rgba(255,255,255,.96);
+  -webkit-backdrop-filter:saturate(180%) blur(20px);
+  backdrop-filter:saturate(180%) blur(20px);
+  border-radius:16px;
+  box-shadow:0 8px 32px rgba(0,0,0,.10), 0 2px 6px rgba(0,0,0,.04);
+  padding:12px 16px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  z-index:340;
+  transition:transform .42s cubic-bezier(.32,.72,0,1), opacity .28s;
+  opacity:0;
+  cursor:pointer;
+  user-select:none;
+  -webkit-user-select:none;
+  touch-action:pan-x;
+}
+.ai-banner.show{
+  transform:translate(-50%,0);
+  opacity:1;
+}
+.ai-banner.dragging{
+  transition:none;
+}
+.ai-banner-avatar{
+  flex:0 0 auto;
+  width:38px;height:38px;border-radius:50%;
+  background:var(--accent-soft);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--text-2);
+  font-size:14px;font-weight:500;
+  overflow:hidden;
+}
+.ai-banner-avatar img{width:100%;height:100%;object-fit:cover;display:block;}
+.ai-banner-main{
+  flex:1 1 auto;min-width:0;
+}
+.ai-banner-name{
+  font-size:13.5px;
+  font-weight:600;
+  letter-spacing:-.1px;
+  color:var(--text);
+  line-height:1.35;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.ai-banner-msg{
+  font-size:12.5px;
+  color:var(--text-2);
+  margin-top:3px;
+  line-height:1.4;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+/* 番茄钟页面 */
+.focus-mode-seg{
+  margin-bottom:28px;
+}
+.focus-ring-wrap{
+  position:relative;
+  width:260px;
+  height:260px;
+  margin:0 auto 24px;
+}
+.focus-ring{
+  width:100%;
+  height:100%;
+  display:block;
+}
+.ring-bg{
+  fill:none;
+  stroke:var(--line);
+  stroke-width:8;
+}
+.ring-fg{
+  fill:none;
+  stroke:var(--accent);
+  stroke-width:8;
+  stroke-linecap:round;
+  transition:stroke-dashoffset .3s linear;
+}
+.focus-ring-wrap.stopwatch .ring-bg,
+.focus-ring-wrap.stopwatch .ring-fg{
+  opacity:0;
+}
+.focus-ring-inner{
+  position:absolute;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  pointer-events:none;
+}
+.focus-avatar{
+  pointer-events:auto;
+  width:56px;height:56px;border-radius:50%;
+  background:var(--accent-soft);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--text-3);overflow:hidden;position:relative;
+  transition:transform .12s;
+}
+.focus-avatar:active{transform:scale(.95);}
+.focus-avatar img{width:100%;height:100%;object-fit:cover;display:none;}
+.focus-avatar svg{width:24px;height:24px;}
+.focus-time{
+  font-size:40px;
+  font-weight:700;
+  letter-spacing:-1px;
+  line-height:1;
+  color:var(--text);
+  font-variant-numeric:tabular-nums;
+}
+.focus-presets{
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  padding:2px 0 20px;
+  justify-content:center;
+  -webkit-overflow-scrolling:touch;
+}
+.focus-presets::-webkit-scrollbar{display:none;}
+.focus-preset{
+  flex:0 0 auto;
+  background:var(--card);
+  border:1px solid var(--line-2);
+  border-radius:999px;
+  padding:6px 14px;
+  font-size:13px;
+  color:var(--text-2);
+  transition:background .14s,color .14s,border-color .14s;
+}
+.focus-preset:active{transform:scale(.96);}
+.focus-preset.active{
+  background:var(--accent);
+  color:var(--accent-text);
+  border-color:var(--accent);
+}
+.focus-presets.hidden{display:none;}
+.focus-controls{
+  display:flex;
+  gap:12px;
+  justify-content:center;
+}
+.focus-btn{
+  min-width:110px;
+  padding:13px 24px;
+  border-radius:12px;
+  font-size:15px;
+  font-weight:500;
+  transition:opacity .14s,background .14s;
+}
+.focus-btn.primary{
+  background:var(--accent);
+  color:var(--accent-text);
+}
+.focus-btn.primary:active{opacity:.85;}
+.focus-btn.secondary{
+  background:var(--card);
+  border:1px solid var(--line-2);
+  color:var(--text-2);
+}
+.focus-btn.secondary:active{background:var(--accent-soft);}
+
+/* 统计页专注板块 */
+.focus-stats-card{
+  background:var(--card);
+  border-radius:var(--radius-lg);
+  box-shadow:var(--shadow);
+  padding:18px 16px 16px;
+}
+.focus-stats-row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-bottom:18px;
+}
+.focus-stats-item{
+  text-align:center;
+}
+.focus-stats-num{
+  font-size:24px;
+  font-weight:700;
+  letter-spacing:-.6px;
+  line-height:1.1;
+  color:var(--text);
+  font-variant-numeric:tabular-nums;
+}
+.focus-stats-num small{
+  font-size:12px;
+  font-weight:500;
+  color:var(--text-2);
+  margin-left:2px;
+  letter-spacing:0;
+}
+.focus-stats-label{
+  font-size:11.5px;
+  color:var(--text-2);
+  margin-top:6px;
+  letter-spacing:.2px;
+}
+.focus-bars{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  height:66px;
+  gap:8px;
+  padding-top:8px;
+  border-top:1px solid var(--line);
+}
+.focus-bar-item{
+  flex:1 1 0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+  height:100%;
+  justify-content:flex-end;
+  min-width:0;
+}
+.focus-bar-fill{
+  width:70%;
+  max-width:24px;
+  min-height:2px;
+  border-radius:4px;
+  background:var(--accent-soft);
+  transition:height .3s;
+}
+.focus-bar-fill.has-value{
+  background:var(--accent);
+}
+.focus-bar-label{
+  font-size:10px;
+  color:var(--text-3);
+  letter-spacing:0;
+}
 </style>
 </head>
 <body>
@@ -1276,6 +1525,10 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
           <span class="row-label">AI 助手</span>
           <span class="value"><i class="chev">›</i></span>
         </button>
+        <button class="row" id="rowFocus">
+          <span class="row-label">番茄钟</span>
+          <span class="value"><i class="chev">›</i></span>
+        </button>
         <button class="row" id="rowPeriod">
           <span class="row-label">经期记录</span>
           <span class="value"><i class="chev">›</i></span>
@@ -1320,6 +1573,23 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
         <div class="stat-card">
           <div class="stat-num" id="statPending">0</div>
           <div class="stat-label">本周待完成</div>
+        </div>
+      </div>
+
+      <div class="stats-section">
+        <div class="stats-section-title">专注</div>
+        <div class="focus-stats-card">
+          <div class="focus-stats-row">
+            <div class="focus-stats-item">
+              <div class="focus-stats-num" id="fsToday">0<small>分钟</small></div>
+              <div class="focus-stats-label">今日专注</div>
+            </div>
+            <div class="focus-stats-item">
+              <div class="focus-stats-num" id="fsWeek">0<small>分钟</small></div>
+              <div class="focus-stats-label">本周专注</div>
+            </div>
+          </div>
+          <div class="focus-bars" id="focusBars"></div>
         </div>
       </div>
 
@@ -1611,6 +1881,54 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
   <div class="page-body" id="chatCardBody"></div>
 </div>
 
+<div class="page z140" id="focusPage">
+  <div class="page-bar">
+    <div class="page-bar-side">
+      <button class="page-bar-btn" id="focusBack">返回</button>
+    </div>
+    <div class="page-bar-title">番茄钟</div>
+    <div class="page-bar-side right"></div>
+  </div>
+  <div class="page-body">
+    <div class="seg seg3 focus-mode-seg" id="focusModeSeg">
+      <button data-m="pomodoro">经典番茄钟</button>
+      <button data-m="countdown">倒计时</button>
+      <button data-m="stopwatch">正计时</button>
+    </div>
+
+    <div class="focus-ring-wrap" id="focusRingWrap">
+      <svg class="focus-ring" viewBox="0 0 260 260">
+        <circle class="ring-bg" cx="130" cy="130" r="118"/>
+        <circle class="ring-fg" cx="130" cy="130" r="118" transform="rotate(-90 130 130)" id="focusRingFg"/>
+      </svg>
+      <div class="focus-ring-inner">
+        <button class="focus-avatar" id="focusAvatarBtn" aria-label="更换头像">
+          <img id="focusAvatarImg" alt="">
+          <svg id="focusAvatarPh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="8.4" r="3.7"/><path d="M4.6 20a7.4 7.4 0 0 1 14.8 0"/>
+          </svg>
+        </button>
+        <div class="focus-time" id="focusTime">25:00</div>
+      </div>
+    </div>
+
+    <div class="focus-presets" id="focusPresets">
+      <button class="focus-preset" data-min="5">5 分钟</button>
+      <button class="focus-preset" data-min="10">10 分钟</button>
+      <button class="focus-preset" data-min="15">15 分钟</button>
+      <button class="focus-preset active" data-min="25">25 分钟</button>
+      <button class="focus-preset" data-min="30">30 分钟</button>
+      <button class="focus-preset" data-min="45">45 分钟</button>
+      <button class="focus-preset" data-min="60">60 分钟</button>
+    </div>
+
+    <div class="focus-controls">
+      <button class="focus-btn secondary" id="focusReset">重置</button>
+      <button class="focus-btn primary" id="focusToggle">开始</button>
+    </div>
+  </div>
+</div>
+
 <div class="page z140" id="aiSettingsPage">
   <div class="page-bar">
     <div class="page-bar-side">
@@ -1834,6 +2152,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
 
 <div class="toast" id="toast"></div>
 
+<!-- 待办通知横幅 -->
 <div class="notif-banner" id="notifBanner">
   <div class="notif-icon">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -1850,8 +2169,21 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
   </div>
 </div>
 
+<!-- AI 消息横幅 -->
+<div class="ai-banner" id="aiBanner">
+  <div class="ai-banner-avatar">
+    <img id="aiBannerAvatarImg" alt="">
+    <span id="aiBannerAvatarText" style="display:none">AI</span>
+  </div>
+  <div class="ai-banner-main">
+    <div class="ai-banner-name" id="aiBannerName">AI 助手</div>
+    <div class="ai-banner-msg" id="aiBannerMsg">消息预览</div>
+  </div>
+</div>
+
 <input type="file" id="avatarInput" accept="image/*" hidden>
 <input type="file" id="aiAvatarInput" accept="image/*" hidden>
+<input type="file" id="focusAvatarInput" accept="image/*" hidden>
 <input type="file" id="importInput" accept=".json,application/json" hidden>
 <input type="file" id="aiImportInput" accept=".json,application/json" hidden>
 
@@ -1860,7 +2192,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
   'use strict';
 
   /* ============ 版本号 ============ */
-  const APP_VERSION = 'v1.0.3';
+  const APP_VERSION = 'v1.1.0';
 
   const STORAGE_KEY = 'task-hub-v1';
   const PRI_LABEL = { normal: '普通', mid: '中', high: '高' };
@@ -1869,6 +2201,8 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
   const WEEK_SHORT = ['日', '一', '二', '三', '四', '五', '六'];
   const TAB_TITLE = { todo: '待办', calendar: '日历', notes: '备忘录', me: '我的', stats: '统计' };
   const WHEEL_ITEM_H = 36;
+  const RING_RADIUS = 118;
+  const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
 
   const $  = (s, r) => (r || document).querySelector(s);
   const $$ = (s, r) => Array.prototype.slice.call((r || document).querySelectorAll(s));
@@ -1907,6 +2241,18 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     const d = new Date();
     return String(d.getFullYear()) + pad(d.getMonth() + 1) + pad(d.getDate()) + '-' +
            pad(d.getHours()) + pad(d.getMinutes()) + pad(d.getSeconds());
+  }
+  function formatFocusTime(sec) {
+    sec = Math.max(0, Math.floor(sec));
+    const h = Math.floor(sec / 3600);
+    const m = Math.floor((sec % 3600) / 60);
+    const s = sec % 60;
+    if (h > 0) return h + ':' + pad(m) + ':' + pad(s);
+    return pad(m) + ':' + pad(s);
+  }
+  function formatMinutes(ms) {
+    const mins = Math.floor(ms / 60000);
+    return mins;
   }
 
   const CN_NUM = { '零':0,'一':1,'二':2,'两':2,'三':3,'四':4,'五':5,'六':6,'七':7,'八':8,'九':9,'十':10 };
@@ -2070,7 +2416,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
   }
 
   const DEFAULT_DATA = {
-    version: 12,
+    version: 13,
     user: { name: '', avatar: '', signature: '' },
     groups: [],
     todos: [],
@@ -2087,6 +2433,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
       msgCounter: 0,
       items: []
     },
+    focus: { records: [] },
     period: { records: [] },
     createdAt: Date.now(),
     updatedAt: Date.now()
@@ -2105,6 +2452,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
       merged.groups = (merged.groups || []).filter(g => g && g.id && g.name);
       merged.chat = (merged.chat || []).filter(m => m && m.id && m.role);
       merged.period.records = (merged.period.records || []).filter(r => r && r.id && r.date);
+      merged.focus.records = (merged.focus.records || []).filter(r => r && r.id && typeof r.duration === 'number');
       merged.aiMemory.items = (merged.aiMemory.items || []).filter(m => m && m.id && m.text);
       if (!merged.aiMemory.summaryInterval || merged.aiMemory.summaryInterval < 1) {
         merged.aiMemory.summaryInterval = 20;
@@ -2914,7 +3262,8 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
         !$('#groupDetailPage').classList.contains('show') &&
         !$('#todoPickerPage').classList.contains('show') &&
         !$('#notePickerPage').classList.contains('show') &&
-        !$('#chatCardPage').classList.contains('show')) {
+        !$('#chatCardPage').classList.contains('show') &&
+        !$('#focusPage').classList.contains('show')) {
       document.body.classList.remove('locked');
     }
     teId = null;
@@ -3465,7 +3814,8 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
         !$('#groupDetailPage').classList.contains('show') &&
         !$('#todoPickerPage').classList.contains('show') &&
         !$('#notePickerPage').classList.contains('show') &&
-        !$('#chatCardPage').classList.contains('show')) {
+        !$('#chatCardPage').classList.contains('show') &&
+        !$('#focusPage').classList.contains('show')) {
       document.body.classList.remove('locked');
     }
     neId = null;
@@ -3802,7 +4152,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
   });
 
   $('#rowClear').addEventListener('click', () => {
-    confirmDialog('清空所有数据', '待办、分组、备忘录、头像、用户名、签名、经期记录、AI 设置与聊天记录都将被删除，且无法恢复。', () => {
+    confirmDialog('清空所有数据', '待办、分组、备忘录、头像、用户名、签名、经期记录、番茄钟记录、AI 设置与聊天记录都将被删除，且无法恢复。', () => {
       db = clone(DEFAULT_DATA);
       db.createdAt = Date.now();
       save();
@@ -3841,6 +4191,9 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     }
     $('#statDone').textContent = done;
     $('#statPending').textContent = pending;
+
+    // 专注统计
+    renderFocusStats();
 
     const groups = [];
     db.groups.forEach(g => {
@@ -3887,6 +4240,59 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
       html += '<div class="heat-cell out">' + d + '</div>';
     }
     $('#heatGrid').innerHTML = html;
+  }
+
+  /* ============ 专注统计 ============ */
+  function getFocusStats() {
+    const todayStart = startOfToday().getTime();
+    const todayEnd = todayStart + 86400000;
+    const weekStart = startOfWeek(new Date()).getTime();
+    const weekEnd = weekStart + 7 * 86400000;
+
+    let todayMs = 0, weekMs = 0;
+    const dailyMs = {};
+    const last7 = [];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      const k = dateKey(d);
+      dailyMs[k] = 0;
+      last7.push(k);
+    }
+
+    (db.focus.records || []).forEach(r => {
+      const ts = r.endedAt || r.startedAt || 0;
+      const ms = (r.duration || 0) * 1000;
+      if (ts >= todayStart && ts < todayEnd) todayMs += ms;
+      if (ts >= weekStart && ts < weekEnd) weekMs += ms;
+      const k = dateKey(new Date(ts));
+      if (k in dailyMs) dailyMs[k] += ms;
+    });
+
+    return {
+      todayMs: todayMs,
+      weekMs: weekMs,
+      daily: last7.map(k => ({ key: k, ms: dailyMs[k] }))
+    };
+  }
+
+  function renderFocusStats() {
+    const stats = getFocusStats();
+    $('#fsToday').innerHTML = formatMinutes(stats.todayMs) + '<small>分钟</small>';
+    $('#fsWeek').innerHTML = formatMinutes(stats.weekMs) + '<small>分钟</small>';
+
+    const maxMs = Math.max(1, stats.daily.reduce((a, b) => Math.max(a, b.ms), 0));
+    const dayNames = ['日', '一', '二', '三', '四', '五', '六'];
+    $('#focusBars').innerHTML = stats.daily.map(d => {
+      const dt = new Date(d.key + 'T00:00:00');
+      const w = dayNames[dt.getDay()];
+      const h = maxMs > 0 && d.ms > 0 ? Math.max(4, Math.round((d.ms / maxMs) * 60)) : 2;
+      const cls = d.ms > 0 ? 'focus-bar-fill has-value' : 'focus-bar-fill';
+      return '<div class="focus-bar-item">' +
+        '<div class="' + cls + '" style="height:' + h + 'px"></div>' +
+        '<div class="focus-bar-label">' + w + '</div>' +
+      '</div>';
+    }).join('');
   }
 
   $('#groupStats').addEventListener('click', e => {
@@ -4269,6 +4675,411 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
       save(); renderPeriodStats(); renderPeriodCalendar(); toast('已取消');
     };
   }
+
+  /* ============ 番茄钟 ============ */
+  const focusTimer = {
+    mode: 'pomodoro',          // pomodoro | countdown | stopwatch
+    totalSeconds: 25 * 60,
+    remainingSeconds: 25 * 60,
+    elapsedSeconds: 0,
+    running: false,
+    startedAt: null,           // Date.now()，本次运行段的起点
+    accumulatedMs: 0,          // 之前运行段累计的毫秒
+    tickHandle: null,
+    sessionStartTs: null,      // 本次会话开始的 Date.now()，用于记录
+    presetMinutes: 25
+  };
+
+  function focusRenderAvatar() {
+    const img = $('#focusAvatarImg');
+    const ph = $('#focusAvatarPh');
+    if (db.ai.avatar) {
+      img.src = db.ai.avatar;
+      img.style.display = 'block';
+      ph.style.display = 'none';
+    } else {
+      img.removeAttribute('src');
+      img.style.display = 'none';
+      ph.style.display = 'block';
+    }
+  }
+
+  function renderFocus() {
+    const isStopwatch = focusTimer.mode === 'stopwatch';
+    const wrap = $('#focusRingWrap');
+    wrap.classList.toggle('stopwatch', isStopwatch);
+
+    // 时间显示
+    let displaySec;
+    if (isStopwatch) displaySec = focusTimer.elapsedSeconds;
+    else displaySec = focusTimer.remainingSeconds;
+    $('#focusTime').textContent = formatFocusTime(displaySec);
+
+    // 进度环
+    if (!isStopwatch && focusTimer.totalSeconds > 0) {
+      const progress = Math.max(0, Math.min(1, focusTimer.remainingSeconds / focusTimer.totalSeconds));
+      const offset = RING_CIRCUMFERENCE * (1 - progress);
+      const ring = $('#focusRingFg');
+      ring.style.strokeDasharray = RING_CIRCUMFERENCE;
+      ring.style.strokeDashoffset = offset;
+    }
+
+    // 开始/暂停 按钮
+    const toggle = $('#focusToggle');
+    if (focusTimer.running) {
+      toggle.textContent = '暂停';
+    } else {
+      toggle.textContent = '开始';
+    }
+
+    // 预设按钮的 active 状态
+    $$('.focus-preset').forEach(b => {
+      const m = parseInt(b.dataset.min, 10);
+      b.classList.toggle('active', !isStopwatch && m === focusTimer.presetMinutes);
+    });
+
+    // 模式分段器
+    $$('#focusModeSeg button').forEach(b => {
+      b.classList.toggle('active', b.dataset.m === focusTimer.mode);
+    });
+
+    // 预设行，正计时模式隐藏
+    $('#focusPresets').classList.toggle('hidden', isStopwatch);
+  }
+
+  function focusTick() {
+    if (!focusTimer.running) return;
+    const elapsedMs = focusTimer.accumulatedMs + (Date.now() - focusTimer.startedAt);
+    const totalSec = Math.floor(elapsedMs / 1000);
+
+    if (focusTimer.mode === 'stopwatch') {
+      focusTimer.elapsedSeconds = totalSec;
+      renderFocus();
+    } else {
+      const rem = focusTimer.totalSeconds - totalSec;
+      if (rem <= 0) {
+        focusTimer.remainingSeconds = 0;
+        renderFocus();
+        completeFocusTimer();
+        return;
+      }
+      focusTimer.remainingSeconds = rem;
+      renderFocus();
+    }
+  }
+
+  function startFocusTimer() {
+    if (focusTimer.running) return;
+    if (focusTimer.mode !== 'stopwatch' && focusTimer.remainingSeconds <= 0) return;
+
+    focusTimer.running = true;
+    focusTimer.startedAt = Date.now();
+    if (!focusTimer.sessionStartTs) focusTimer.sessionStartTs = Date.now();
+    if (focusTimer.tickHandle) clearInterval(focusTimer.tickHandle);
+    focusTimer.tickHandle = setInterval(focusTick, 250);
+    renderFocus();
+  }
+
+  function pauseFocusTimer() {
+    if (!focusTimer.running) return;
+    focusTimer.running = false;
+    focusTimer.accumulatedMs += Date.now() - focusTimer.startedAt;
+    focusTimer.startedAt = null;
+    if (focusTimer.tickHandle) {
+      clearInterval(focusTimer.tickHandle);
+      focusTimer.tickHandle = null;
+    }
+    renderFocus();
+  }
+
+  function resetFocusTimer() {
+    pauseFocusTimer();
+    focusTimer.accumulatedMs = 0;
+    focusTimer.sessionStartTs = null;
+    focusTimer.elapsedSeconds = 0;
+    if (focusTimer.mode === 'stopwatch') {
+      focusTimer.remainingSeconds = 0;
+    } else {
+      focusTimer.remainingSeconds = focusTimer.totalSeconds;
+    }
+    renderFocus();
+  }
+
+  function setFocusDurationByMinutes(mins) {
+    if (focusTimer.running) return;
+    focusTimer.presetMinutes = mins;
+    focusTimer.totalSeconds = mins * 60;
+    focusTimer.remainingSeconds = mins * 60;
+    focusTimer.accumulatedMs = 0;
+    focusTimer.elapsedSeconds = 0;
+    focusTimer.sessionStartTs = null;
+    renderFocus();
+  }
+
+  function completeFocusTimer() {
+    // 定时结束
+    pauseFocusTimer();
+    const durationSec = focusTimer.totalSeconds;
+    const startedAt = focusTimer.sessionStartTs || (Date.now() - durationSec * 1000);
+    addFocusRecord(focusTimer.mode, durationSec, startedAt);
+    focusTimer.accumulatedMs = 0;
+    focusTimer.sessionStartTs = null;
+    focusTimer.remainingSeconds = focusTimer.totalSeconds;
+
+    // 如果不在番茄钟页面，就只弹个提示
+    if ($('#focusPage').classList.contains('show')) {
+      showFocusCompleteDialog(durationSec);
+    } else {
+      toast('专注完成，已记录 ' + Math.floor(durationSec / 60) + ' 分钟');
+    }
+    renderFocus();
+  }
+
+  function completeFocusManually() {
+    // 正计时模式：手动完成
+    if (focusTimer.running) pauseFocusTimer();
+    const elapsedSec = Math.floor(focusTimer.accumulatedMs / 1000);
+    if (elapsedSec < 1) {
+      toast('时间太短，无需记录');
+      return;
+    }
+    const startedAt = focusTimer.sessionStartTs || (Date.now() - elapsedSec * 1000);
+    addFocusRecord('stopwatch', elapsedSec, startedAt);
+    focusTimer.accumulatedMs = 0;
+    focusTimer.sessionStartTs = null;
+    focusTimer.elapsedSeconds = 0;
+    renderFocus();
+    showFocusCompleteDialog(elapsedSec);
+  }
+
+  function addFocusRecord(mode, durationSec, startedAt) {
+    if (!db.focus) db.focus = { records: [] };
+    if (!Array.isArray(db.focus.records)) db.focus.records = [];
+    db.focus.records.push({
+      id: uid(),
+      mode: mode,
+      duration: durationSec,
+      startedAt: startedAt || Date.now(),
+      endedAt: Date.now()
+    });
+    save();
+  }
+
+  function showFocusCompleteDialog(durationSec) {
+    const mins = Math.floor(durationSec / 60);
+    const secs = durationSec % 60;
+    let durText;
+    if (mins > 0 && secs > 0) durText = mins + ' 分钟 ' + secs + ' 秒';
+    else if (mins > 0) durText = mins + ' 分钟';
+    else durText = secs + ' 秒';
+
+    openSheet(
+      '<div class="sheet-title">专注完成</div>' +
+      '<div style="text-align:center;padding:0 8px 22px;">' +
+        '<div style="font-size:34px;font-weight:700;letter-spacing:-.6px;color:var(--text);font-variant-numeric:tabular-nums;">' + durText + '</div>' +
+        '<div style="font-size:14px;color:var(--text-2);margin-top:12px;line-height:1.6;">' +
+          '要发给 AI 鼓励一下吗？' +
+        '</div>' +
+      '</div>' +
+      '<button class="sheet-btn" id="fcSend">要</button>' +
+      '<button class="sheet-btn subtle" id="fcSkip">不用</button>'
+    );
+
+    $('#fcSend').onclick = () => {
+      closeSheet();
+      sendFocusToAI(durationSec);
+    };
+    $('#fcSkip').onclick = closeSheet;
+  }
+
+  function sendFocusToAI(durationSec) {
+    const mins = Math.floor(durationSec / 60);
+    const text = '我刚完成了一次 ' + mins + ' 分钟的专注，请鼓励一下我。';
+    pushUserMessage(text);
+    requestAiReply();
+    toast('已发送');
+  }
+
+  function openFocusPage() {
+    // 重置为未运行状态
+    pauseFocusTimer();
+    focusTimer.mode = 'pomodoro';
+    focusTimer.presetMinutes = 25;
+    focusTimer.totalSeconds = 25 * 60;
+    focusTimer.remainingSeconds = 25 * 60;
+    focusTimer.elapsedSeconds = 0;
+    focusTimer.accumulatedMs = 0;
+    focusTimer.sessionStartTs = null;
+    focusRenderAvatar();
+    renderFocus();
+    $('#focusPage').classList.add('show');
+    document.body.classList.add('locked');
+  }
+
+  function closeFocusPage() {
+    $('#focusPage').classList.remove('show');
+    if (!$('#todoEditor').classList.contains('show') &&
+        !$('#noteEditor').classList.contains('show') &&
+        !$('#searchPage').classList.contains('show') &&
+        !$('#periodPage').classList.contains('show') &&
+        !$('#aiChatPage').classList.contains('show') &&
+        !$('#aiSettingsPage').classList.contains('show') &&
+        !$('#aiMemoryPage').classList.contains('show') &&
+        !$('#groupDetailPage').classList.contains('show') &&
+        !$('#todoPickerPage').classList.contains('show') &&
+        !$('#notePickerPage').classList.contains('show') &&
+        !$('#chatCardPage').classList.contains('show')) {
+      document.body.classList.remove('locked');
+    }
+  }
+
+  $('#rowFocus').addEventListener('click', openFocusPage);
+  $('#focusBack').addEventListener('click', closeFocusPage);
+
+  $('#focusModeSeg').addEventListener('click', e => {
+    const b = e.target.closest('button[data-m]');
+    if (!b) return;
+    const m = b.dataset.m;
+    if (m === focusTimer.mode) return;
+    pauseFocusTimer();
+    focusTimer.mode = m;
+    focusTimer.accumulatedMs = 0;
+    focusTimer.elapsedSeconds = 0;
+    focusTimer.sessionStartTs = null;
+    if (m === 'stopwatch') {
+      focusTimer.remainingSeconds = 0;
+    } else {
+      focusTimer.totalSeconds = focusTimer.presetMinutes * 60;
+      focusTimer.remainingSeconds = focusTimer.totalSeconds;
+    }
+    renderFocus();
+  });
+
+  $('#focusPresets').addEventListener('click', e => {
+    const b = e.target.closest('.focus-preset');
+    if (!b) return;
+    const m = parseInt(b.dataset.min, 10);
+    if (!isNaN(m) && m > 0) {
+      setFocusDurationByMinutes(m);
+    }
+  });
+
+  $('#focusToggle').addEventListener('click', () => {
+    if (focusTimer.running) {
+      pauseFocusTimer();
+    } else {
+      startFocusTimer();
+    }
+  });
+
+  $('#focusReset').addEventListener('click', () => {
+    // 正计时模式下，如果已经有累计时间，先问是否记录
+    if (focusTimer.mode === 'stopwatch' && focusTimer.accumulatedMs >= 1000) {
+      const elapsedSec = Math.floor(focusTimer.accumulatedMs / 1000);
+      confirmDialog('是否记录这次专注？', '已经进行 ' + Math.floor(elapsedSec / 60) + ' 分钟，重置前可以先记录。', () => {
+        completeFocusManually();
+      });
+      // 用户点取消 → 什么都不做；点确定 → 记录并结束
+      // 但我们要给用户一个「丢弃」选项，所以这里再补一个
+      // 简化：用 prompt 太复杂，就用二次交互
+      // 改成直接询问记录或丢弃
+      // 这里为了简化，我们直接走 completeFocusManually 的路径并附上重置
+      // 但用户点取消后需要什么都不做。所以这里只处理「确认记录」
+      // 如果用户点取消，直接什么都不做，用户可再次点重置/继续
+      // 简化处理：把 confirmDialog 的取消当作丢弃
+      // 但那是危险的。所以改成：取消 → 丢弃并重置
+      // 更安全：直接弹一个 sheet
+      return;
+    }
+    resetFocusTimer();
+  });
+
+  // 由于上面 confirmDialog 的语义复杂，改用一个专门的 sheet 来处理正计时重置
+  // 重写重置按钮逻辑
+  $('#focusReset').addEventListener('click', e => {
+    e.stopImmediatePropagation();
+    if (focusTimer.mode === 'stopwatch' && focusTimer.accumulatedMs >= 1000) {
+      const elapsedSec = Math.floor(focusTimer.accumulatedMs / 1000);
+      pauseFocusTimer();
+      openSheet(
+        '<div class="sheet-title">正计时进行中</div>' +
+        '<div style="text-align:center;color:var(--text-2);font-size:13.5px;padding:0 8px 16px;line-height:1.7;">' +
+          '已经进行 ' + Math.floor(elapsedSec / 60) + ' 分钟，要怎么处理？' +
+        '</div>' +
+        '<button class="sheet-btn" id="frSave">记录并重置</button>' +
+        '<button class="sheet-btn danger" id="frDiscard">丢弃并重置</button>' +
+        '<button class="sheet-btn subtle" id="frCancel">取消</button>'
+      );
+      $('#frSave').onclick = () => {
+        closeSheet();
+        const startedAt = focusTimer.sessionStartTs || (Date.now() - elapsedSec * 1000);
+        addFocusRecord('stopwatch', elapsedSec, startedAt);
+        focusTimer.accumulatedMs = 0;
+        focusTimer.sessionStartTs = null;
+        focusTimer.elapsedSeconds = 0;
+        renderFocus();
+        toast('已记录 ' + Math.floor(elapsedSec / 60) + ' 分钟');
+      };
+      $('#frDiscard').onclick = () => {
+        closeSheet();
+        focusTimer.accumulatedMs = 0;
+        focusTimer.sessionStartTs = null;
+        focusTimer.elapsedSeconds = 0;
+        renderFocus();
+        toast('已丢弃');
+      };
+      $('#frCancel').onclick = closeSheet;
+      return;
+    }
+    resetFocusTimer();
+  }, true);
+
+  // 正计时模式下的“完成并记录”
+  // 在主按钮下方根据模式动态显示
+  // 简化：当模式是 stopwatch 且暂停且有累计时间，显示一个「完成记录」按钮
+  // 通过向 focus-controls 动态添加实现
+  function ensureFinishBtn() {
+    const controls = document.querySelector('.focus-controls');
+    if (!controls) return;
+    let btn = document.getElementById('focusFinish');
+    const need = focusTimer.mode === 'stopwatch' && !focusTimer.running && focusTimer.accumulatedMs >= 1000;
+    if (need && !btn) {
+      btn = document.createElement('button');
+      btn.id = 'focusFinish';
+      btn.className = 'focus-btn primary';
+      btn.textContent = '完成';
+      btn.addEventListener('click', completeFocusManually);
+      controls.appendChild(btn);
+    } else if (!need && btn) {
+      btn.remove();
+    }
+  }
+
+  // 在 renderFocus 里调用 ensureFinishBtn
+  const _originalRenderFocus = renderFocus;
+  renderFocus = function () {
+    _originalRenderFocus();
+    ensureFinishBtn();
+  };
+
+  // 头像点击 → 更换
+  $('#focusAvatarBtn').addEventListener('click', () => {
+    $('#focusAvatarInput').click();
+  });
+
+  $('#focusAvatarInput').addEventListener('change', async e => {
+    const file = e.target.files && e.target.files[0];
+    e.target.value = '';
+    if (!file) return;
+    try {
+      const dataUrl = await compressImage(file, 240);
+      db.ai.avatar = dataUrl;
+      save();
+      focusRenderAvatar();
+      renderAiAvatar();
+      toast('头像已更新');
+    } catch (err) { toast('图片读取失败'); }
+  });
 
   /* ============ 聊天 ============ */
   let chatEditMode = false;
@@ -4685,10 +5496,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
           '<div class="detail-stat-label">完成任务</div>' +
         '</div>' +
       '</div>';
-      html += '<div class="detail-block">' +
-        '<div class="detail-label">说明</div>' +
-        '<div class="detail-text">番茄钟功能接入后，这里会展示更完整的专注数据与当日总结。</div>' +
-      '</div>';
     } else {
       $('#chatCardTitle').textContent = '详情';
       html += '<div class="detail-text">' + esc(m.text || '') + '</div>';
@@ -4707,7 +5514,8 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
         !$('#aiSettingsPage').classList.contains('show') &&
         !$('#aiMemoryPage').classList.contains('show') &&
         !$('#todoPickerPage').classList.contains('show') &&
-        !$('#notePickerPage').classList.contains('show')) {
+        !$('#notePickerPage').classList.contains('show') &&
+        !$('#focusPage').classList.contains('show')) {
       document.body.classList.remove('locked');
     }
   }
@@ -4765,7 +5573,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
   function buildSystemPrompt() {
     const lines = [];
 
-    // 固定引导语
     lines.push('你是一位友善、贴心的助手，可以主动关心用户的状态和感受。');
     lines.push('');
     lines.push('对话原则：');
@@ -4782,7 +5589,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     lines.push('4. 输出前自己检查一遍，确认条数在 3–6 条、总字数在 50–100 字。');
     lines.push('');
 
-    // 用户自定义的人设
     if (db.ai.persona) {
       lines.push('AI 人设：');
       lines.push(db.ai.persona);
@@ -4839,24 +5645,20 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
 
     let parts = raw.split('|||').map(s => s.trim()).filter(Boolean);
 
-    // 没切出来，或只有一条 → 直接显示
     if (parts.length <= 1) {
       addAiMessage(raw);
       return;
     }
 
-    // 限制最多 6 条
     if (parts.length > 6) {
       const head = parts.slice(0, 5);
       const tail = parts.slice(5).join(' ');
       parts = head.concat([tail]);
     }
 
-    // 逐条显示，间隔递增（前面快、后面慢）
     let delay = 0;
     parts.forEach((part, i) => {
       if (i > 0) {
-        // 每条之间的间隔：400 + i*500 毫秒，逐条拉长
         delay += 400 + i * 500;
       }
       const t = setTimeout(() => {
@@ -4866,10 +5668,21 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     });
   }
 
+  let lastAiBannerTs = 0;
+
   function addAiMessage(text) {
     db.chat.push({ id: uid(), role: 'ai', text, ts: Date.now() });
     save();
     renderChat();
+
+    // 如果用户不在聊天页，弹 AI 消息横幅（带冷却）
+    if (!$('#aiChatPage').classList.contains('show')) {
+      const now = Date.now();
+      if (now - lastAiBannerTs > 5000) {
+        lastAiBannerTs = now;
+        showAiBanner(text);
+      }
+    }
   }
 
   function pushUserMessage(text, type, card) {
@@ -4945,7 +5758,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     if (proBtn) proBtn.disabled = false;
     renderChat();
 
-    // 按 ||| 切分逐条显示
     displayAiReply(replyText);
   }
 
@@ -4992,6 +5804,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     renderChat();
     $('#aiChatPage').classList.add('show');
     document.body.classList.add('locked');
+    hideAiBanner();
   }
   function closeAiChat() {
     if (chatEditMode) saveEdit();
@@ -5008,7 +5821,8 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
         !$('#groupDetailPage').classList.contains('show') &&
         !$('#todoPickerPage').classList.contains('show') &&
         !$('#notePickerPage').classList.contains('show') &&
-        !$('#chatCardPage').classList.contains('show')) {
+        !$('#chatCardPage').classList.contains('show') &&
+        !$('#focusPage').classList.contains('show')) {
       document.body.classList.remove('locked');
     }
   }
@@ -5188,12 +6002,16 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     const startTs = start.getTime();
     const endTs = startTs + 86400000;
 
-    // 当日完成任务数
     const doneCount = db.todos.filter(t => t.done && t.completedAt &&
       t.completedAt >= startTs && t.completedAt < endTs).length;
 
-    // 番茄钟未做，先留空
-    const totalMinutes = null;
+    // 从专注记录里算今日总时长
+    let totalMs = 0;
+    (db.focus.records || []).forEach(r => {
+      const ts = r.endedAt || r.startedAt || 0;
+      if (ts >= startTs && ts < endTs) totalMs += (r.duration || 0) * 1000;
+    });
+    const totalMinutes = Math.floor(totalMs / 60000);
 
     return { totalMinutes: totalMinutes, doneCount: doneCount };
   }
@@ -5201,9 +6019,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
   function sendFocusSummaryToChat() {
     closePlusPanel();
     const stats = getTodayFocusStats();
-    const minsText = (stats.totalMinutes == null || stats.totalMinutes === 0)
-      ? '暂无数据'
-      : (stats.totalMinutes + ' 分钟');
+    const minsText = stats.totalMinutes > 0 ? (stats.totalMinutes + ' 分钟') : '暂无数据';
     const contextText = '今日专注总结\n专注总时长：' + minsText + '\n完成任务：' + stats.doneCount + ' 个';
 
     const card = {
@@ -5216,7 +6032,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
 
   $('#plusSendFocus').addEventListener('click', sendFocusSummaryToChat);
 
-  /* ============ 通知横幅 ============ */
+  /* ============ 待办通知横幅 ============ */
   const notifState = {
     showing: false,
     queue: [],
@@ -5328,7 +6144,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
       const id = notifState.currentTodoId;
       hideBanner();
       if (id) {
-        // 打开待办详情
         if (!$('#todoEditor').classList.contains('show')) {
           openTodoEditor(id);
         }
@@ -5336,15 +6151,12 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     });
   })();
 
-  /* 已弹过的待办 ID（本次会话内不重复弹） */
   const notifShownIds = new Set();
 
   function checkDueTodos() {
     const now = new Date();
     const nowTs = now.getTime();
-    const today = todayKey();
 
-    // 收集所有已到期未弹过的待办，按截止时间排序
     const dueList = [];
     db.todos.forEach(t => {
       if (t.done) return;
@@ -5355,7 +6167,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
         const d = new Date(tm.due.replace('T', ' ').replace(/-/g, '/'));
         if (!isNaN(d.getTime())) dueTs = d.getTime();
       } else if (tm.type === 'date' && tm.date) {
-        // 全天任务：当天 9:00 提醒
         const d = new Date(tm.date + ' 09:00'.replace(/-/g, '/'));
         if (!isNaN(d.getTime())) dueTs = d.getTime();
       }
@@ -5371,10 +6182,106 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     });
   }
 
-  // App 打开时检查一次
   setTimeout(checkDueTodos, 1200);
-  // 之后每 30 秒检查一次
   setInterval(checkDueTodos, 30000);
+
+  /* ============ AI 消息横幅 ============ */
+  const aiBannerState = {
+    autoTimer: null,
+    dragStartY: 0,
+    dragCurrentY: 0,
+    dragging: false
+  };
+
+  function renderAiBannerAvatar() {
+    const img = $('#aiBannerAvatarImg');
+    const txt = $('#aiBannerAvatarText');
+    if (db.ai.avatar) {
+      img.src = db.ai.avatar;
+      img.style.display = 'block';
+      txt.style.display = 'none';
+    } else {
+      img.removeAttribute('src');
+      img.style.display = 'none';
+      txt.style.display = '';
+      const initial = (db.ai.name || 'AI').slice(0, 1);
+      txt.textContent = initial;
+    }
+  }
+
+  function showAiBanner(text) {
+    const banner = $('#aiBanner');
+    renderAiBannerAvatar();
+    $('#aiBannerName').textContent = db.ai.name || 'AI 助手';
+    const preview = String(text || '').replace(/\s+/g, ' ').trim();
+    $('#aiBannerMsg').textContent = preview.length > 40 ? preview.slice(0, 40) + '…' : preview;
+
+    banner.style.transform = '';
+    banner.style.opacity = '';
+    banner.classList.add('show');
+
+    clearTimeout(aiBannerState.autoTimer);
+    aiBannerState.autoTimer = setTimeout(hideAiBanner, 4200);
+  }
+
+  function hideAiBanner() {
+    const banner = $('#aiBanner');
+    if (!banner.classList.contains('show')) return;
+    banner.classList.remove('show');
+    clearTimeout(aiBannerState.autoTimer);
+  }
+
+  (function bindAiBanner() {
+    const banner = $('#aiBanner');
+
+    banner.addEventListener('pointerdown', e => {
+      aiBannerState.dragStartY = e.clientY;
+      aiBannerState.dragCurrentY = e.clientY;
+      aiBannerState.dragging = true;
+      banner.classList.add('dragging');
+      clearTimeout(aiBannerState.autoTimer);
+    });
+
+    banner.addEventListener('pointermove', e => {
+      if (!aiBannerState.dragging) return;
+      aiBannerState.dragCurrentY = e.clientY;
+      const dy = aiBannerState.dragCurrentY - aiBannerState.dragStartY;
+      if (dy < 0) {
+        banner.style.transform = 'translate(-50%, ' + dy + 'px)';
+        banner.style.opacity = String(Math.max(0, 1 + dy / 100));
+      }
+    }, { passive: true });
+
+    ['pointerup', 'pointercancel', 'pointerleave'].forEach(ev => {
+      banner.addEventListener(ev, () => {
+        if (!aiBannerState.dragging) return;
+        aiBannerState.dragging = false;
+        banner.classList.remove('dragging');
+        const dy = aiBannerState.dragCurrentY - aiBannerState.dragStartY;
+        if (dy < -40) {
+          banner.style.transform = 'translate(-50%, -160%)';
+          banner.style.opacity = '0';
+          setTimeout(() => {
+            banner.style.transform = '';
+            banner.style.opacity = '';
+            hideAiBanner();
+          }, 200);
+        } else {
+          banner.style.transform = '';
+          banner.style.opacity = '';
+          aiBannerState.autoTimer = setTimeout(hideAiBanner, 2500);
+        }
+      });
+    });
+
+    banner.addEventListener('click', () => {
+      if (aiBannerState.dragging) return;
+      const dy = aiBannerState.dragCurrentY - aiBannerState.dragStartY;
+      if (Math.abs(dy) > 8) return;
+      hideAiBanner();
+      openAiChat();
+    });
+  })();
 
   /* ============ AI 设置 ============ */
   function renderAiAvatar() {
@@ -5469,7 +6376,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     try {
       const dataUrl = await compressImage(file, 240);
       db.ai.avatar = dataUrl;
-      save(); renderAiAvatar(); toast('已保存');
+      save(); renderAiAvatar(); focusRenderAvatar(); toast('已保存');
     } catch (err) { toast('图片读取失败'); }
   });
 
@@ -5579,6 +6486,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
         if (!db.ai.contextCount || db.ai.contextCount < 1) db.ai.contextCount = 10;
         save();
         openAiSettings();
+        focusRenderAvatar();
         $('#aiChatTitle').textContent = db.ai.name || 'AI 助手';
         toast('已导入 AI 设定');
       } catch (e) { toast('文件格式不正确'); }
@@ -5753,6 +6661,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     if (e.target.closest('#todoPickerList') || e.target.closest('#notePickerList')) return;
     if (e.target.closest('#chatBody')) return;
     if (e.target.closest('#chatCardPage')) return;
+    if (e.target.closest('#focusPage')) return;
 
     const toggle = e.target.closest('[data-act="toggle"]');
     if (toggle) {
@@ -5789,6 +6698,7 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     if ($('#aiMemoryPage').classList.contains('show')) { closeMemoryPage(); return; }
     if ($('#aiSettingsPage').classList.contains('show')) { closeAiSettings(); return; }
     if ($('#aiChatPage').classList.contains('show')) { closeAiChat(); return; }
+    if ($('#focusPage').classList.contains('show')) { closeFocusPage(); return; }
     if ($('#periodPage').classList.contains('show')) { closePeriodPage(); return; }
     if ($('#groupDetailPage').classList.contains('show')) { closeGroupDetail(); return; }
     if ($('#searchPage').classList.contains('show')) { closeSearch(); return; }
