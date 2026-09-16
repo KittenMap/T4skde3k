@@ -10,6 +10,11 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="任务台">
 <meta name="format-detection" content="telephone=no">
+
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+
 <style>
 :root{
   --bg:#F7F7F8;--card:#FFFFFF;
@@ -62,7 +67,6 @@ main{
 .view{display:none;}
 .view.active{display:block;}
 
-/* 快速添加 */
 .quick-add{display:flex;gap:8px;align-items:center;padding:4px 0 12px;}
 .quick-input{
   flex:1 1 auto;min-width:0;
@@ -81,7 +85,6 @@ main{
 .quick-btn:active{transform:scale(.94);}
 .quick-btn svg{width:20px;height:20px;}
 
-/* 分组胶囊 */
 .chips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 14px;-webkit-overflow-scrolling:touch;}
 .chips::-webkit-scrollbar{display:none;}
 .chip{
@@ -94,7 +97,6 @@ main{
 .chip.active{background:var(--accent);color:var(--accent-text);box-shadow:none;}
 .chip.add{color:var(--text-2);background:var(--accent-soft);box-shadow:none;}
 
-/* 待办卡片 */
 .todo{
   display:flex;align-items:flex-start;gap:12px;
   background:var(--card);border-radius:var(--radius);
@@ -136,7 +138,6 @@ main{
 .empty{text-align:center;color:var(--text-3);font-size:14px;line-height:1.9;padding:76px 20px;}
 .empty.small{padding:34px 20px;font-size:13.5px;}
 
-/* 日历 */
 .cal-head{display:flex;align-items:center;justify-content:space-between;padding:2px 2px 16px;}
 .cal-title{font-size:17px;font-weight:600;letter-spacing:-.2px;}
 .cal-nav{
@@ -180,7 +181,6 @@ main{
 .section-head{display:flex;align-items:center;justify-content:space-between;padding:26px 2px 12px;}
 .section-head h2{margin:0;font-size:12.5px;font-weight:600;color:var(--text-2);letter-spacing:.4px;}
 
-/* 备忘录列表 */
 .note{
   background:var(--card);border-radius:var(--radius);
   padding:15px 16px;box-shadow:var(--shadow);margin-bottom:9px;
@@ -194,7 +194,6 @@ main{
 }
 .note-date{font-size:11.5px;color:var(--text-3);margin-top:9px;}
 
-/* 我的 */
 .profile{
   display:flex;align-items:center;gap:16px;
   background:var(--card);border-radius:var(--radius-lg);
@@ -247,7 +246,6 @@ main{
   padding:6px 20px 26px;line-height:1.8;
 }
 
-/* 统计页 */
 .stats-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
 .stat-card{background:var(--card);border-radius:var(--radius-lg);padding:20px 18px;box-shadow:var(--shadow);}
 .stat-num{font-size:32px;font-weight:700;letter-spacing:-1px;line-height:1.05;font-variant-numeric:tabular-nums;}
@@ -288,7 +286,6 @@ main{
 .heat-legend i.lv3{background:rgba(44,44,46,.46);}
 .heat-legend i.lv4{background:rgba(44,44,46,.78);}
 
-/* 底部导航 */
 .tabbar{
   flex:0 0 auto;display:flex;
   background:rgba(255,255,255,.9);
@@ -306,7 +303,6 @@ main{
 .tab.active{color:var(--text);}
 .tab:active{opacity:.6;}
 
-/* 悬浮按钮 */
 .fab{
   position:absolute;right:18px;bottom:calc(env(safe-area-inset-bottom) + 78px);
   width:52px;height:52px;border-radius:50%;
@@ -318,7 +314,6 @@ main{
 .fab:active{transform:scale(.92);}
 .fab svg{width:22px;height:22px;}
 
-/* 独立页面 */
 .page{
   position:fixed;inset:0;z-index:120;max-width:640px;margin:0 auto;
   background:var(--bg);display:flex;flex-direction:column;
@@ -358,7 +353,6 @@ main{
 .block-label{font-size:12.5px;color:var(--text-2);letter-spacing:.2px;margin-bottom:10px;padding-left:2px;}
 .sub-label{font-size:12.5px;color:var(--text-2);margin-bottom:8px;padding-left:2px;}
 
-/* 分组标题 */
 .section-divider{
   display:flex;align-items:center;gap:10px;
   margin:4px 0 20px;color:var(--text-2);
@@ -369,7 +363,6 @@ main{
   content:'';flex:1;height:1px;background:var(--line);
 }
 
-/* 分段控件 */
 .seg{display:flex;background:var(--accent-soft);border-radius:10px;padding:2px;gap:2px;}
 .seg button{
   flex:1 1 0;padding:9px 2px;font-size:13px;border-radius:8px;
@@ -386,7 +379,6 @@ main{
 .seg.seg7{display:grid;grid-template-columns:repeat(7,1fr);}
 .seg.seg7 button{font-size:12.5px;padding:9px 0;}
 
-/* 输入框 */
 .input{
   width:100%;display:block;background:var(--card);
   border:1px solid var(--line-2);border-radius:10px;
@@ -436,7 +428,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
 .field-row .input{flex:1;}
 .field-row .sep{color:var(--text-2);font-size:14px;flex:0 0 auto;}
 
-/* 时间按钮 */
 .time-btn{
   flex:1;display:flex;align-items:center;justify-content:center;
   background:var(--card);border:1px solid var(--line-2);
@@ -448,7 +439,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
 .time-btn:active{background:var(--accent-soft);}
 .time-btn.placeholder{color:var(--text-3);}
 
-/* 步进器 */
 .stepper{
   display:inline-flex;align-items:center;gap:10px;
   background:var(--card);border:1px solid var(--line-2);
@@ -467,7 +457,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
 }
 .stepper .step-unit{font-size:13px;color:var(--text-2);}
 
-/* 编辑页底部按钮 */
 .page-foot{
   flex:0 0 auto;display:flex;gap:10px;
   padding:12px 16px calc(12px + env(safe-area-inset-bottom));
@@ -487,7 +476,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
 }
 .btn-primary:active{opacity:.85;}
 
-/* 备忘录编辑器 */
 .note-editor{
   flex:1 1 auto;overflow-y:auto;-webkit-overflow-scrolling:touch;
   padding:8px 20px 24px;font-size:16.5px;line-height:1.72;
@@ -542,7 +530,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
 .tb-btn.txt.h{font-size:12.5px;font-weight:700;}
 .tb-sep{flex:0 0 auto;width:1px;height:18px;background:var(--line-2);margin:0 4px;}
 
-/* 搜索 */
 .search-bar{flex:0 0 auto;padding:4px 18px 10px;}
 .search-input{
   width:100%;background:var(--card);border-radius:11px;
@@ -558,7 +545,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
 }
 .search-empty{text-align:center;color:var(--text-3);font-size:13.5px;padding:60px 20px;}
 
-/* 经期 */
 .period-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px;}
 .period-stat{
   background:var(--card);border-radius:var(--radius);
@@ -583,7 +569,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
 .cal-cell.selected .pdot.mid,
 .cal-cell.selected .pdot.pred{background:transparent;border-color:#fff;}
 
-/* AI 聊天 */
 .chat-body{
   flex:1 1 auto;overflow-y:auto;-webkit-overflow-scrolling:touch;
   padding:12px 16px 20px;
@@ -617,7 +602,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
 }
 .msg.typing .msg-bubble{color:var(--text-3);}
 
-/* 选择复选框 */
 .msg-check{
   display:none;flex:0 0 auto;
   width:20px;height:20px;border-radius:50%;
@@ -655,7 +639,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
 .chat-send:active{opacity:.8;}
 .chat-send:disabled{opacity:.4;pointer-events:none;}
 
-/* 聊天操作栏 */
 .chat-action-bar{
   flex:0 0 auto;display:none;
   align-items:center;gap:10px;
@@ -674,7 +657,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
 
-/* AI 头像按钮 */
 .ai-avatar-btn{
   width:64px;height:64px;border-radius:50%;
   background:var(--accent-soft);display:flex;align-items:center;justify-content:center;
@@ -684,7 +666,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
 .ai-avatar-btn img{width:100%;height:100%;object-fit:cover;display:none;}
 .ai-avatar-btn svg{width:26px;height:26px;}
 
-/* Token 估算 */
 .token-card{
   background:var(--card);border:1px solid var(--line-2);
   border-radius:var(--radius);padding:14px 16px;
@@ -697,7 +678,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
 }
 .token-card .tk-value small{font-size:11.5px;color:var(--text-2);font-weight:400;margin-left:2px;}
 
-/* 记忆列表 */
 .mem-item{
   background:var(--card);border-radius:var(--radius);
   padding:14px 16px;box-shadow:var(--shadow);margin-bottom:9px;
@@ -725,7 +705,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
 .mem-item-actions button:active{background:var(--line-2);}
 .mem-item-actions button.danger{color:var(--pri-high);}
 
-/* 开关 */
 .switch-row{
   display:flex;align-items:center;justify-content:space-between;
   background:var(--card);border:1px solid var(--line-2);
@@ -743,7 +722,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
 }
 .switch.on::after{transform:translateX(18px);}
 
-/* 对话框 */
 .dlg-backdrop{
   position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.22);
   display:flex;align-items:center;justify-content:center;padding:32px;
@@ -772,7 +750,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
 .dlg-btn:active{opacity:.7;}
 .dlg-btn.primary{background:var(--accent);color:var(--accent-text);font-weight:500;}
 
-/* 底部面板 */
 .sheet-backdrop{
   position:fixed;inset:0;z-index:150;background:rgba(0,0,0,.2);
   opacity:0;pointer-events:none;transition:opacity .24s;
@@ -797,7 +774,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
 .sheet-btn:active{background:var(--accent-soft);}
 .sheet-btn.danger{color:var(--pri-high);}
 
-/* 滚轮时间选择器 */
 .wheel-backdrop{
   position:fixed;inset:0;z-index:170;background:rgba(0,0,0,.22);
   opacity:0;pointer-events:none;transition:opacity .24s;
@@ -838,7 +814,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
 .wheel-item.active{color:var(--text);font-weight:600;}
 .wheel-sep{font-size:17px;font-weight:600;color:var(--text);padding-bottom:2px;flex:0 0 auto;}
 
-/* Toast */
 .toast{
   position:fixed;left:50%;top:calc(env(safe-area-inset-top) + 14px);
   transform:translate(-50%,-16px);
@@ -1026,7 +1001,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
   </button>
 </div>
 
-<!-- 待办编辑页 -->
 <div class="page" id="todoEditor">
   <div class="page-bar">
     <div class="page-bar-side">
@@ -1076,7 +1050,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
   </div>
 </div>
 
-<!-- 备忘录编辑页 -->
 <div class="page" id="noteEditor">
   <div class="page-bar">
     <div class="page-bar-side">
@@ -1113,7 +1086,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
   </div>
 </div>
 
-<!-- 用户名编辑页 -->
 <div class="page" id="nameEditor">
   <div class="page-bar">
     <div class="page-bar-side"></div>
@@ -1129,7 +1101,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
   </div>
 </div>
 
-<!-- 签名编辑页 -->
 <div class="page" id="signEditor">
   <div class="page-bar">
     <div class="page-bar-side"></div>
@@ -1145,7 +1116,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
   </div>
 </div>
 
-<!-- 搜索页 -->
 <div class="page z130" id="searchPage">
   <div class="page-bar">
     <div class="page-bar-side">
@@ -1160,7 +1130,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
   <div class="page-body nopad" id="searchResults"></div>
 </div>
 
-<!-- 统计分组详情页 -->
 <div class="page z130" id="groupDetailPage">
   <div class="page-bar">
     <div class="page-bar-side">
@@ -1174,7 +1143,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
   </div>
 </div>
 
-<!-- 经期记录页 -->
 <div class="page z130" id="periodPage">
   <div class="page-bar">
     <div class="page-bar-side">
@@ -1215,7 +1183,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
   </div>
 </div>
 
-<!-- AI 聊天页 -->
 <div class="page z130" id="aiChatPage">
   <div class="page-bar">
     <div class="page-bar-side">
@@ -1238,7 +1205,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
   </div>
 </div>
 
-<!-- AI 设置页 -->
 <div class="page z140" id="aiSettingsPage">
   <div class="page-bar">
     <div class="page-bar-side">
@@ -1318,7 +1284,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
   </div>
 </div>
 
-<!-- 记忆管理页 -->
 <div class="page z140" id="aiMemoryPage">
   <div class="page-bar">
     <div class="page-bar-side">
@@ -1353,7 +1318,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
   </div>
 </div>
 
-<!-- 滚轮时间选择器 -->
 <div class="wheel-backdrop" id="wheelBackdrop"></div>
 <div class="wheel-panel" id="wheelPanel">
   <div class="wheel-bar">
@@ -1368,7 +1332,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
   </div>
 </div>
 
-<!-- 确认对话框 -->
 <div class="dlg-backdrop" id="dlgBackdrop">
   <div class="dlg">
     <div class="dlg-title" id="dlgTitle"></div>
@@ -1380,7 +1343,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
   </div>
 </div>
 
-<!-- 输入对话框 -->
 <div class="dlg-backdrop" id="pDlgBackdrop">
   <div class="dlg">
     <div class="dlg-title" id="pDlgTitle"></div>
@@ -1446,7 +1408,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     return x;
   }
 
-  /* ============ 快速添加解析 ============ */
   const CN_NUM = { '零':0,'一':1,'二':2,'两':2,'三':3,'四':4,'五':5,'六':6,'七':7,'八':8,'九':9,'十':10 };
 
   function cnNum(str) {
@@ -1614,7 +1575,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     return (div.textContent || '').split('\n').map(s => s.trim()).filter(Boolean);
   }
 
-  /* ============ 数据 ============ */
   const DEFAULT_DATA = {
     version: 7,
     user: { name: '', avatar: '', signature: '' },
@@ -1774,7 +1734,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     }, 0);
   }
 
-  /* ============ 时间展开 ============ */
   function todoOccursOn(t, key) {
     const tm = t.time || {};
     switch (tm.type) {
@@ -1843,7 +1802,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     return true;
   }
 
-  /* ============ 格式化 ============ */
   function fmtDay(key) {
     if (!key) return '';
     const d = new Date(key + 'T00:00:00');
@@ -1946,7 +1904,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     }
   }
 
-  /* ============ 状态 ============ */
   const state = {
     tab: 'todo',
     activeGroup: 'all',
@@ -1957,7 +1914,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     groupDetailId: null
   };
 
-  /* ============ Toast ============ */
   let toastTimer = null;
   function toast(msg) {
     const el = $('#toast');
@@ -1967,7 +1923,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     toastTimer = setTimeout(() => el.classList.remove('show'), 1800);
   }
 
-  /* ============ 对话框 ============ */
   let confirmCb = null;
   function confirmDialog(title, desc, onOk) {
     $('#dlgTitle').textContent = title;
@@ -2007,7 +1962,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     if (e.key === 'Enter') { e.preventDefault(); $('#pDlgOk').click(); }
   });
 
-  /* ============ 底部面板 ============ */
   function openSheet(html) {
     $('#sheetBody').innerHTML = html;
     $('#sheetBackdrop').classList.add('show');
@@ -2019,7 +1973,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
   }
   $('#sheetBackdrop').addEventListener('click', closeSheet);
 
-  /* ============ 滚轮时间选择器 ============ */
   const wheel = { hour: 0, minute: 0, onOk: null };
 
   function buildWheel(el, count) {
@@ -2097,7 +2050,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     if (cb) cb(pad(h) + ':' + pad(m));
   });
 
-  /* ============ 分组 ============ */
   function renderGroups() {
     const el = $('#groupChips');
     let html = '<button class="chip' + (state.activeGroup === 'all' ? ' active' : '') + '" data-g="all">全部</button>';
@@ -2172,7 +2124,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     $('#gCancel').onclick = closeSheet;
   }
 
-  /* ============ 待办渲染 ============ */
   function sortKey(t) {
     const tm = t.time || {};
     switch (tm.type) {
@@ -2245,7 +2196,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     wrap.innerHTML = list.map(todoHTML).join('');
   }
 
-  /* ============ 勾选 ============ */
   function toggleTodo(id) {
     const t = db.todos.find(x => x.id === id);
     if (!t) return;
@@ -2256,7 +2206,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     renderAll();
   }
 
-  /* ============ 快速添加处理 ============ */
   function handleQuickAdd() {
     const inp = $('#quickInput');
     const text = inp.value.trim();
@@ -2283,7 +2232,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     if (e.key === 'Enter') { e.preventDefault(); handleQuickAdd(); }
   });
 
-  /* ============ 待办编辑页 ============ */
   let teId = null;
   let teTime = {};
   let tePri = 'normal';
@@ -2764,7 +2712,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     });
   });
 
-  /* ============ 日历 ============ */
   function dayDotClass(key) {
     const list = db.todos.filter(t => todoOccursOn(t, key));
     if (!list.length) return null;
@@ -2856,7 +2803,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     renderCalendar();
   });
 
-  /* ============ 备忘录 ============ */
   function renderNotes() {
     const wrap = $('#notesList');
     const list = db.notes.slice().sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
@@ -3082,7 +3028,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     if ($('#noteEditor').classList.contains('show')) updateToolbarState();
   });
 
-  /* ============ 我的 ============ */
   function renderMe() {
     const nameEl = $('#nameBtn');
     if (db.user.name) {
@@ -3199,7 +3144,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     } catch (err) { toast('图片读取失败'); }
   });
 
-  /* ============ 导入导出 ============ */
   function exportData() {
     const payload = clone(db);
     payload.app = 'task-hub';
@@ -3261,7 +3205,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     });
   });
 
-  /* ============ 统计 ============ */
   function renderStats() {
     const now = new Date();
     const start = startOfWeek(now);
@@ -3374,7 +3317,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
   }
   $('#groupDetailBack').addEventListener('click', closeGroupDetail);
 
-  /* ============ 搜索 ============ */
   function openSearch() {
     $('#searchInput').value = '';
     $('#searchResults').innerHTML = '<div class="search-empty">输入关键词开始搜索</div>';
@@ -3473,7 +3415,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     }
   });
 
-  /* ============ 经期 ============ */
   function periodRanges() {
     const recs = db.period.records.slice().sort((a, b) => a.date < b.date ? -1 : 1);
     const ranges = [];
@@ -3717,7 +3658,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     };
   }
 
-  /* ============ AI 聊天 ============ */
   let chatEditMode = false;
   let chatEditId = null;
   let chatSelectMode = false;
@@ -3965,7 +3905,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     }
   });
 
-  /* --- API 工具 --- */
   function normalizeChatURL(endpoint) {
     let url = (endpoint || '').trim().replace(/\/+$/, '');
     if (!url) return '';
@@ -4067,7 +4006,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
       save();
     }
 
-    // 检查配置
     if (!db.ai.endpoint) { addAiMessage('请先在 AI 设置中填写接口地址。'); return; }
     if (!db.ai.apiKey) { addAiMessage('请先在 AI 设置中填写 API Key。'); return; }
     if (!db.ai.model) { addAiMessage('请先在 AI 设置中选择模型。'); return; }
@@ -4170,7 +4108,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
   });
   $('#aiChatSettings').addEventListener('click', () => { openAiSettings(); });
 
-  /* ============ AI 设置 ============ */
   function renderAiAvatar() {
     const img = $('#aiAvatarImg');
     const ph = $('#aiAvatarPh');
@@ -4266,7 +4203,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     } catch (err) { toast('图片读取失败'); }
   });
 
-  // 测试连接
   $('#aiTestConn').addEventListener('click', async () => {
     const endpoint = $('#aiEndpointInput').value.trim();
     const key = $('#aiKeyInput').value.trim();
@@ -4296,7 +4232,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     }
   });
 
-  // 获取模型列表
   $('#aiFetchModels').addEventListener('click', async () => {
     const endpoint = $('#aiEndpointInput').value.trim();
     const key = $('#aiKeyInput').value.trim();
@@ -4349,7 +4284,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     $$('#aiModelList button').forEach(x => x.classList.toggle('active', x === btn));
   });
 
-  /* ============ 记忆管理 ============ */
   function renderMemoryList() {
     const wrap = $('#memoryList');
     const list = db.aiMemory.items.slice().sort((a, b) => (b.ts || 0) - (a.ts || 0));
@@ -4462,7 +4396,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     }
   });
 
-  /* ============ 全局渲染 ============ */
   function renderAll() {
     renderGroups();
     renderTodos();
@@ -4497,7 +4430,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     switchTab(btn.dataset.tab);
   });
 
-  /* ============ 待办卡片交互 ============ */
   document.addEventListener('click', e => {
     if (e.target.closest('#neContent')) return;
 
@@ -4514,13 +4446,11 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     }
   });
 
-  /* ============ 悬浮按钮 ============ */
   $('#fab').addEventListener('click', () => {
     if (state.tab === 'todo') openTodoEditor(null);
     else if (state.tab === 'notes') openNoteEditor(null);
   });
 
-  /* ============ ESC ============ */
   document.addEventListener('keydown', e => {
     if (e.key !== 'Escape') return;
     if ($('#wheelPanel').classList.contains('show')) { closeWheelTime(); return; }
@@ -4543,7 +4473,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     if ($('#signEditor').classList.contains('show')) { closeSignEditor(); return; }
   });
 
-  /* ============ 防双击缩放 ============ */
   let lastTouchEnd = 0;
   document.addEventListener('touchend', e => {
     const now = Date.now();
@@ -4551,45 +4480,6 @@ textarea.input{resize:none;line-height:1.55;min-height:76px;}
     lastTouchEnd = now;
   }, { passive: false });
 
-  /* ============ PWA ============ */
-  function injectManifest() {
-    try {
-      const svg =
-        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">' +
-          '<rect width="512" height="512" rx="114" fill="#2C2C2E"/>' +
-          '<path d="M150 262 L222 334 L364 180" fill="none" stroke="#FFFFFF" ' +
-                'stroke-width="44" stroke-linecap="round" stroke-linejoin="round"/>' +
-        '</svg>';
-      const iconUrl = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svg)));
-      const manifest = {
-        name: '任务台', short_name: '任务台',
-        description: '本地个人任务与备忘工具',
-        start_url: '.', scope: '.',
-        display: 'standalone', orientation: 'portrait',
-        background_color: '#F7F7F8', theme_color: '#F7F7F8',
-        icons: [{ src: iconUrl, sizes: '512x512', type: 'image/svg+xml', purpose: 'any' }]
-      };
-      const blob = new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' });
-      const link = document.createElement('link');
-      link.rel = 'manifest';
-      link.href = URL.createObjectURL(blob);
-      document.head.appendChild(link);
-      const apple = document.createElement('link');
-      apple.rel = 'apple-touch-icon'; apple.href = iconUrl;
-      document.head.appendChild(apple);
-      const fav = document.createElement('link');
-      fav.rel = 'icon'; fav.href = iconUrl;
-      document.head.appendChild(fav);
-    } catch (e) {}
-  }
-  injectManifest();
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('sw.js').catch(() => {});
-    });
-  }
-
-  /* ============ 启动 ============ */
   renderAll();
   switchTab('todo');
 
